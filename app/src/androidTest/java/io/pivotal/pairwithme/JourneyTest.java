@@ -1,20 +1,15 @@
 package io.pivotal.pairwithme;
 
-import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.ApplicationTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import io.pivotal.pairwithme.viewoffers.ViewOffersActivity;
+import io.pivotal.pairwithme.viewschedule.ViewScheduleActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -23,14 +18,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @LargeTest
 public class JourneyTest {
     @Rule
-    public ActivityTestRule<ViewOffersActivity> initialActivity =
-            new ActivityTestRule<>(ViewOffersActivity.class, true, false);
+    public ActivityTestRule<ViewScheduleActivity> initialActivity =
+            new ActivityTestRule<>(ViewScheduleActivity.class, true, false);
 
 
     @Test
-    public void programmerFindsAndAcceptsAPair() {
+    public void KathyAndKevinFindATimeToPair() {
         initialActivity.launchActivity(new Intent());
 
-        onView(withId(R.id.view_offers_screen));
+        onView(withId(R.id.view_schedule_screen));
     }
 }

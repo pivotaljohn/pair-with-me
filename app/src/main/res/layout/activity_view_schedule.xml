@@ -8,9 +8,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="io.pivotal.pairwithme.viewoffers.ViewOffersActivity">
+    tools:context=".viewschedule.ViewScheduleActivity">
 
-    <FrameLayout android:id="@+id/view_offers_screen"
+    <FrameLayout android:id="@+id/view_schedule_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>
