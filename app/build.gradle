@@ -5,11 +5,13 @@ android {
     buildToolsVersion rootProject.ANDROID_BUILD_TOOLS_VER
 
     defaultConfig {
+        applicationId rootProject.APPLICATION_ID
+        testApplicationId rootProject.TEST_APPLICATION_ID
+
         minSdkVersion rootProject.MIN_SDK_VER
         targetSdkVersion rootProject.ANDROID_SDK_VER
         versionCode rootProject.VERSION_CODE
         versionName rootProject.VERSION_NAME
-        testApplicationId rootProject.TEST_APPLICATION_ID
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -25,7 +27,12 @@ dependencies {
     compile "com.android.support:appcompat-v7:${rootProject.ANDROID_SUPPORT_LIBRARY_VER}"
     compile "com.android.support:recyclerview-v7:$rootProject.ANDROID_SUPPORT_LIBRARY_VER"
 
+    compile "com.google.firebase:firebase-database:$rootProject.FIREBASE_VER"
+
     // Journey Tests
     testCompile "junit:junit:${rootProject.JUNIT_VER}"
     androidTestCompile "com.android.support.test.espresso:espresso-intents:${rootProject.ESPRESSO_VER}"
 }
+
+// include Firebase
+apply plugin: 'com.google.gms.google-services'

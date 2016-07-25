@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "556933213032",
+    "firebase_url": "https://pair-with-me-49338.firebaseio.com",
+    "project_id": "pair-with-me-49338",
+    "storage_bucket": "pair-with-me-49338.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556933213032:android:b3cf90cd1ac26221",
+        "android_client_info": {
+          "package_name": "io.pivotal.pairwithme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "556933213032-g7ermrocsm401cl6gd141o0uvjbb9s49.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1Ivt_0MOyb6oNA43ukjoqhKDCNuC0kT4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

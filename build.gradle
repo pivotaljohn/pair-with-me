@@ -3,9 +3,11 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.google.gms:google-services:3.0.0'
     }
 }
 
@@ -33,6 +35,7 @@ allprojects {
              Details:
              https://sites.google.com/a/android.com/tools/tech-docs/new-build-system/user-guide#TOC-Resolving-conflicts-between-main-and-test-APK
            */
+            force "com.android.support:support-v4:$rootProject.ANDROID_SUPPORT_LIBRARY_VER"
             force "com.android.support:support-annotations:$rootProject.ANDROID_SUPPORT_LIBRARY_VER"
         }
     }
@@ -50,6 +53,8 @@ ext {
 
     // Core App Libraries
     ANDROID_SUPPORT_LIBRARY_VER = '23.4.0' // https://developer.android.com/tools/support-library/index.html#revisions
+
+    FIREBASE_VER = '9.2.1'
 
     // Testing
     JUNIT_VER = '4.12'  // https://github.com/junit-team/junit4/releases/latest
