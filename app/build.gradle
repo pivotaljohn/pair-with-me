@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion rootProject.ANDROID_SDK_VER
+    buildToolsVersion rootProject.ANDROID_BUILD_TOOLS_VER
 
     defaultConfig {
-        applicationId "io.pivotal.pairwithme"
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.MIN_SDK_VER
+        targetSdkVersion rootProject.ANDROID_SDK_VER
+        versionCode rootProject.VERSION_CODE
+        versionName rootProject.VERSION_NAME
+        testApplicationId rootProject.TEST_APPLICATION_ID
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -22,10 +22,10 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile "com.android.support:appcompat-v7:${rootProject.ANDROID_SUPPORT_LIBRARY_VER}"
+    compile "com.android.support:recyclerview-v7:$rootProject.ANDROID_SUPPORT_LIBRARY_VER"
 
     // Journey Tests
     testCompile "junit:junit:${rootProject.JUNIT_VER}"
     androidTestCompile "com.android.support.test.espresso:espresso-intents:${rootProject.ESPRESSO_VER}"
-
 }

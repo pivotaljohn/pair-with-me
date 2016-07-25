@@ -39,6 +39,15 @@ allprojects {
 }
 
 ext {
+    APPLICATION_ID = 'io.pivotal.pairwithme'
+    TEST_APPLICATION_ID = APPLICATION_ID + '.test'
+    VERSION_CODE = 1
+    VERSION_NAME = '0.0.1'
+
+    ANDROID_SDK_VER = 23
+    MIN_SDK_VER = 15                     // https://developer.android.com/about/dashboards/index.html
+    ANDROID_BUILD_TOOLS_VER = '23.0.3'   // https://developer.android.com/tools/revisions/build-tools.html
+
     // Core App Libraries
     ANDROID_SUPPORT_LIBRARY_VER = '23.4.0' // https://developer.android.com/tools/support-library/index.html#revisions
 
