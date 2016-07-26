@@ -1,8 +1,8 @@
-
 dependencies:
   pre:
     - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3
     - echo y | android update sdk --no-ui --filter extra-android-m2repository
+    - echo y | android update sdk --no-ui --all --filter extra-google-m2repository
 
 test:
   pre:
@@ -11,4 +11,4 @@ test:
         parallel: true
     - circle-android wait-for-boot
   override:
-    - ./gradlew test connectedAndroidTest
+    - ./gradlew test connectedAndroidTest --console=plain

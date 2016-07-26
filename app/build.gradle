@@ -24,8 +24,9 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:${rootProject.ANDROID_SUPPORT_LIBRARY_VER}"
+    compile "com.android.support:appcompat-v7:$rootProject.ANDROID_SUPPORT_LIBRARY_VER"
     compile "com.android.support:recyclerview-v7:$rootProject.ANDROID_SUPPORT_LIBRARY_VER"
+    compile "com.android.support:cardview-v7:$rootProject.ANDROID_SUPPORT_LIBRARY_VER"
 
     compile "com.google.firebase:firebase-database:$rootProject.FIREBASE_VER"
 
