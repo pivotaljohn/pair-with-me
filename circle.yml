@@ -10,5 +10,7 @@ test:
         background: true
         parallel: true
     - circle-android wait-for-boot
+    - adb logcat > $CIRCLE_ARTIFACTS/logcat.out :
+        background: true
   override:
     - ./gradlew test connectedAndroidTest --console=plain
