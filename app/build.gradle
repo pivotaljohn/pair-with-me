@@ -30,8 +30,11 @@ dependencies {
 
     compile "com.google.firebase:firebase-database:$rootProject.FIREBASE_VER"
 
-    // Journey Tests
+    // Testing
     testCompile "junit:junit:${rootProject.JUNIT_VER}"
+    testCompile "org.mockito:mockito-core:$rootProject.MOCKITO_VER"
+
+    // Journey Tests
     androidTestCompile "com.android.support.test.espresso:espresso-intents:${rootProject.ESPRESSO_VER}"
 }
 

@@ -27,7 +27,6 @@ public class JourneyTest {
     public ActivityTestRule<ViewScheduleActivity> initialActivity =
             new ActivityTestRule<>(ViewScheduleActivity.class, true, false);
 
-
     private void unlockDevice() {
         final AppCompatActivity activity = initialActivity.getActivity();
         Runnable wakeUpDevice = new Runnable() {

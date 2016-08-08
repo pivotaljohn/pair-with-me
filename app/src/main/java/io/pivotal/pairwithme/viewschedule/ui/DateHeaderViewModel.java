@@ -1,4 +1,4 @@
-package io.pivotal.pairwithme.viewschedule;
+package io.pivotal.pairwithme.viewschedule.ui;
 
 public class DateHeaderViewModel implements ViewModel {
     private String date;

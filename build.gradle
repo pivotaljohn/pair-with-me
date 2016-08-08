@@ -36,6 +36,8 @@ allprojects {
             force "com.android.support:support-annotations:$rootProject.ANDROID_SUPPORT_LIBRARY_VER"
             force "com.android.support:appcompat-v7:$rootProject.ANDROID_SUPPORT_LIBRARY_VER"
             force "com.android.support:recyclerview-v7:$rootProject.ANDROID_SUPPORT_LIBRARY_VER"
+
+            force "org.hamcrest:hamcrest-core:$rootProject.HAMCREST_VER"
         }
     }
 }
@@ -70,6 +72,8 @@ ext {
 
     // Testing
     JUNIT_VER = '4.12'  // https://github.com/junit-team/junit4/releases/latest
+    HAMCREST_VER = '1.3'                   // https://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.hamcrest
+    MOCKITO_VER = '1.10.19'                // https://github.com/mockito/mockito/blob/master/doc/release-notes/official.md
 
     // Instrumented Testing
     // https://google.github.io/android-testing-support-library/docs/espresso/setup/

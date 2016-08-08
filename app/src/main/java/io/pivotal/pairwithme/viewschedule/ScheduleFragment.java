@@ -9,9 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import io.pivotal.pairwithme.R;
+import io.pivotal.pairwithme.viewschedule.ui.SessionList;
+import io.pivotal.pairwithme.viewschedule.ui.SessionListAdapter;
 
 public class ScheduleFragment extends Fragment {
     public static final String TAG = ScheduleFragment.class.getName();
@@ -27,7 +28,8 @@ public class ScheduleFragment extends Fragment {
         RecyclerView.LayoutManager sessionListLayoutManager = new LinearLayoutManager(getActivity());
         sessionListView.setLayoutManager(sessionListLayoutManager);
 
-        RecyclerView.Adapter sessionListAdapter = new SessionListAdapter();
+        final SessionList sessionList = new SessionList();
+        RecyclerView.Adapter sessionListAdapter = new SessionListAdapter(sessionList, new SessionListAdapter.ViewHolderCreator());
         sessionListView.setAdapter(sessionListAdapter);
 
         Log.d(TAG, "onCreateView() returned: " + rootView);
