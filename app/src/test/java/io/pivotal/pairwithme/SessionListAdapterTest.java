@@ -11,13 +11,16 @@ import io.pivotal.pairwithme.viewschedule.ui.SessionListAdapter;
 import io.pivotal.pairwithme.viewschedule.ui.DateHeaderViewHolder;
 import io.pivotal.pairwithme.viewschedule.ui.SessionViewHolder;
 import io.pivotal.pairwithme.viewschedule.ui.SessionViewModel;
+import io.pivotal.pairwithme.viewschedule.ui.ViewHolder;
 import io.pivotal.pairwithme.viewschedule.ui.ViewHolderCreator;
+import io.pivotal.pairwithme.viewschedule.ui.ViewModel;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class SessionListAdapterTest {
@@ -40,6 +43,9 @@ public class SessionListAdapterTest {
 
     @Test
     public void getItemCount_returnsSizeOfSessionList() {
+        when(mSessionList.getSessionCount()).thenReturn(0);
+        assertThat(subject.getItemCount(), equalTo(0));
+
         when(mSessionList.getSessionCount()).thenReturn(5);
         assertThat(subject.getItemCount(), equalTo(5));
     }
@@ -55,9 +61,9 @@ public class SessionListAdapterTest {
     @Test
     public void getItemViewType_whenItemInSessionListIsSessionViewModel_returnsSESSION_TYPE() {
         SessionViewModel session = mock(SessionViewModel.class);
-        when(mSessionList.getSession(7)).thenReturn(session);
+        when(mSessionList.getSession(4)).thenReturn(session);
 
-        final int actualItemViewType = subject.getItemViewType(7);
+        final int actualItemViewType = subject.getItemViewType(4);
 
         assertThat(actualItemViewType, equalTo(SessionListAdapter.SESSION_TYPE));
     }
@@ -73,4 +79,16 @@ public class SessionListAdapterTest {
         assertThat(subject.onCreateViewHolder(mock(ViewGroup.class), SessionListAdapter.SESSION_TYPE),
                 instanceOf(SessionViewHolder.class));
     }
+
+    @Test
+    public void onBindViewHolder_bindsSessionItemFromSpecifiedPositionToGivenViewHolder() {
+        ViewModel viewModel = mock(ViewModel.class, "ViewModel at Position 5");
+        when(mSessionList.getSession(5)).thenReturn(viewModel);
+        ViewHolder viewHolder = mock(ViewHolder.class, "ViewHolder being bound");
+
+        subject.onBindViewHolder(viewHolder, 5);
+
+        verify(viewHolder).setViewModel(viewModel);
+    }
+
 }

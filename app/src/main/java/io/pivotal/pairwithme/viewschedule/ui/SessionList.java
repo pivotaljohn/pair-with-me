@@ -17,6 +17,6 @@ public class SessionList {
     }
 
     public ViewModel getSession(final int position) {
-        return null;
+        return theList.get(position);
     }
 }

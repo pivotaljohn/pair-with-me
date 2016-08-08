@@ -42,6 +42,7 @@ public class SessionListAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     @SuppressWarnings("unchecked")
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        holder.setViewModel(mSessionList.getSession(position));
     }
 
 }

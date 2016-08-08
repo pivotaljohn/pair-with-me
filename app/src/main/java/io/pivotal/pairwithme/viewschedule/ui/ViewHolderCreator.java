@@ -12,7 +12,7 @@ public class ViewHolderCreator {
     }
 
     public ViewHolder createSession(final ViewGroup parent) {
-        return new DateHeaderViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.date_header, parent, false));
+        return new SessionViewHolder(
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.session, parent, false));
     }
 }
