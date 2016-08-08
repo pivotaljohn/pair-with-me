@@ -8,9 +8,10 @@ import org.junit.Test;
 import io.pivotal.pairwithme.viewschedule.ui.DateHeaderViewModel;
 import io.pivotal.pairwithme.viewschedule.ui.SessionList;
 import io.pivotal.pairwithme.viewschedule.ui.SessionListAdapter;
-import io.pivotal.pairwithme.viewschedule.ui.SessionListAdapter.DateHeaderViewHolder;
-import io.pivotal.pairwithme.viewschedule.ui.SessionListAdapter.SessionViewHolder;
+import io.pivotal.pairwithme.viewschedule.ui.DateHeaderViewHolder;
+import io.pivotal.pairwithme.viewschedule.ui.SessionViewHolder;
 import io.pivotal.pairwithme.viewschedule.ui.SessionViewModel;
+import io.pivotal.pairwithme.viewschedule.ui.ViewHolderCreator;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -23,12 +24,12 @@ public class SessionListAdapterTest {
 
     private SessionListAdapter subject;
     private SessionList mSessionList;
-    private SessionListAdapter.ViewHolderCreator mViewHolderCreator;
+    private ViewHolderCreator mViewHolderCreator;
 
     @Before
     public void setUp() {
         mSessionList = mock(SessionList.class);
-        mViewHolderCreator = mock(SessionListAdapter.ViewHolderCreator.class);
+        mViewHolderCreator = mock(ViewHolderCreator.class);
         DateHeaderViewHolder dateHeaderViewHolder = mock(DateHeaderViewHolder.class);
         SessionViewHolder sessionViewHolder = mock(SessionViewHolder.class);
         when(mViewHolderCreator.createDateHeader(any(ViewGroup.class))).thenReturn(dateHeaderViewHolder);

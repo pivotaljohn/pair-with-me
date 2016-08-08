@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import io.pivotal.pairwithme.R;
 import io.pivotal.pairwithme.viewschedule.ui.SessionList;
 import io.pivotal.pairwithme.viewschedule.ui.SessionListAdapter;
+import io.pivotal.pairwithme.viewschedule.ui.ViewHolderCreator;
 
 public class ScheduleFragment extends Fragment {
     public static final String TAG = ScheduleFragment.class.getName();
@@ -29,7 +30,7 @@ public class ScheduleFragment extends Fragment {
         sessionListView.setLayoutManager(sessionListLayoutManager);
 
         final SessionList sessionList = new SessionList();
-        RecyclerView.Adapter sessionListAdapter = new SessionListAdapter(sessionList, new SessionListAdapter.ViewHolderCreator());
+        RecyclerView.Adapter sessionListAdapter = new SessionListAdapter(sessionList, new ViewHolderCreator());
         sessionListView.setAdapter(sessionListAdapter);
 
         Log.d(TAG, "onCreateView() returned: " + rootView);
