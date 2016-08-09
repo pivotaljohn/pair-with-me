@@ -38,6 +38,7 @@ allprojects {
             force "com.android.support:recyclerview-v7:$rootProject.ANDROID_SUPPORT_LIBRARY_VER"
 
             force "org.hamcrest:hamcrest-core:$rootProject.HAMCREST_VER"
+            force "io.reactivex:rxjava:$rootProject.RXJAVA_VER"
         }
     }
 }
@@ -69,6 +70,7 @@ ext {
     // Core App Libraries
     ANDROID_SUPPORT_LIBRARY_VER = '23.4.0' // https://developer.android.com/tools/support-library/index.html#revisions
     FIREBASE_VER = '9.2.1'
+    RXJAVA_VER = '1.1.8'                   // https://github.com/ReactiveX/RxJava/releases
 
     // Testing
     JUNIT_VER = '4.12'  // https://github.com/junit-team/junit4/releases/latest

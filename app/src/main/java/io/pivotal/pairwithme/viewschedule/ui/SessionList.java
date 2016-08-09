@@ -3,13 +3,24 @@ package io.pivotal.pairwithme.viewschedule.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.pivotal.pairwithme.viewschedule.adapters.Change;
+import io.pivotal.pairwithme.viewschedule.adapters.Insert;
+import rx.Observable;
+import rx.functions.Action1;
+
 public class SessionList {
     private List<ViewModel> theList;
 
-    public SessionList() {
+    public SessionList(final Observable<Change<SessionViewModel>> sessionViewModelChanges) {
         theList = new ArrayList<>();
-        theList.add(new DateHeaderViewModel("July 4, 2016"));
-        theList.add(new SessionViewModel("Billy Bob", "Jul 4 @ 13:00", "JavaScript"));
+        sessionViewModelChanges.subscribe(new Action1<Change<SessionViewModel>>() {
+            @Override
+            public void call(final Change<SessionViewModel> sessionViewModelChange) {
+                if(sessionViewModelChange instanceof Insert) {
+                    theList.add(sessionViewModelChange.getTarget());
+                }
+            }
+        });
     }
 
     public int getSessionCount() {
