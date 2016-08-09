@@ -1,5 +1,6 @@
 package io.pivotal.pairwithme.viewschedule.ui;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import java.util.LinkedList;
@@ -17,13 +18,23 @@ public class SessionListTest {
     @Test
     public void whenSessionViewModelInserted_includesThatViewModelInList() {
         List<Change<SessionViewModel>> changes = new LinkedList<>();
-        changes.add(new Insert(new SessionViewModel("John Doe", "Jan 1 @ 13:01", "JavaScript")));
+        changes.add(new Insert(new SessionViewModel("John Doe", DateTime.parse("2016-01-01T13:01:00Z"), "JavaScript")));
         Observable<Change<SessionViewModel>> fakeSessionViewModelChanges = Observable.from(changes);
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
 
-        assertThat(subject.getSessionCount(), equalTo(1));
-        assertThat(((SessionViewModel) subject.getSession(0)).getName(), equalTo("John Doe"));
+        assertThat(subject.getSessionCount(), equalTo(2));
+        assertThat(((SessionViewModel) subject.getSession(1)).getName(), equalTo("John Doe"));
     }
 
+    @Test
+    public void givenExistSessionViewModelsOccurOnAnotherDate_whenSessionViewModelInserted_includesNewDateHeader() {
+        List<Change<SessionViewModel>> changes = new LinkedList<>();
+        changes.add(new Insert(new SessionViewModel("John Doe", DateTime.parse("2016-01-01T13:01:00Z"), "JavaScript")));
+        Observable<Change<SessionViewModel>> fakeSessionViewModelChanges = Observable.from(changes);
+        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+
+        assertThat(subject.getSessionCount(), equalTo(2));
+        assertThat(((SessionViewModel) subject.getSession(1)).getName(), equalTo("John Doe"));
+    }
 
 }

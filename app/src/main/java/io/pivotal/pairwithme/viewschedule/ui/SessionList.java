@@ -17,6 +17,7 @@ public class SessionList {
             @Override
             public void call(final Change<SessionViewModel> sessionViewModelChange) {
                 if(sessionViewModelChange instanceof Insert) {
+                    theList.add(new DateHeaderViewModel("January 1, 2016"));
                     theList.add(sessionViewModelChange.getTarget());
                 }
             }

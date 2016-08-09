@@ -1,25 +1,38 @@
 package io.pivotal.pairwithme.viewschedule.ui;
 
-public class SessionViewModel implements ViewModel {
-    private String name;
-    private String time;
-    private String description;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
 
-    public SessionViewModel(String name, String time, String description) {
-        this.name = name;
-        this.time = time;
-        this.description = description;
+public class SessionViewModel implements ViewModel {
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("MMM d @ HH:mm");
+
+    private final String mName;
+    private final String mTime;
+    private final DateTime mDateTime;
+    private final String mDescription;
+
+    public SessionViewModel(String name, DateTime dateTime, String description) {
+        mName = name;
+        mTime = DATE_FORMAT.print(dateTime);
+        mDateTime = dateTime;
+        mDescription = description;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public String getTime() {
-        return time;
+        return mTime;
     }
 
     public String getDescription() {
-        return description;
+        return mDescription;
+    }
+
+    public DateTime getDateTime() {
+        return mDateTime;
     }
 }
