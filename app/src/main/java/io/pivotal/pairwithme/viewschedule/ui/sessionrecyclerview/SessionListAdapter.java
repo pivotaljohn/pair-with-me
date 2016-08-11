@@ -35,7 +35,7 @@ public class SessionListAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (mSessionList.getSession(position) instanceof DateHeader) {
+        if (mSessionList.getItem(position) instanceof DateHeader) {
             return DATE_HEADER_TYPE;
         } else {
             return SESSION_TYPE;
@@ -45,7 +45,7 @@ public class SessionListAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     @SuppressWarnings("unchecked")
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.setViewModel(mSessionList.getSession(position));
+        holder.setViewModel(mSessionList.getItem(position));
     }
 
 }

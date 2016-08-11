@@ -7,13 +7,8 @@ import org.junit.Test;
 
 import io.pivotal.pairwithme.viewschedule.ui.model.DateHeader;
 import io.pivotal.pairwithme.viewschedule.ui.model.SessionList;
-import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.SessionListAdapter;
-import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.DateHeaderViewHolder;
-import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.SessionViewHolder;
 import io.pivotal.pairwithme.viewschedule.ui.model.SessionListItem;
 import io.pivotal.pairwithme.viewschedule.ui.model.Session;
-import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.ViewHolder;
-import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.ViewHolderCreator;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -53,7 +48,7 @@ public class SessionListAdapterTest {
     @Test
     public void getItemViewType_whenItemInSessionListIsDateHeaderViewModel_returnsDATE_HEADER_TYPE() {
         DateHeader dateHeader = mock(DateHeader.class);
-        when(mSessionList.getSession(4)).thenReturn(dateHeader);
+        when(mSessionList.getItem(4)).thenReturn(dateHeader);
 
         assertThat(subject.getItemViewType(4), equalTo(SessionListAdapter.DATE_HEADER_TYPE));
     }
@@ -61,7 +56,7 @@ public class SessionListAdapterTest {
     @Test
     public void getItemViewType_whenItemInSessionListIsSessionViewModel_returnsSESSION_TYPE() {
         Session session = mock(Session.class);
-        when(mSessionList.getSession(4)).thenReturn(session);
+        when(mSessionList.getItem(4)).thenReturn(session);
 
         final int actualItemViewType = subject.getItemViewType(4);
 
@@ -83,7 +78,7 @@ public class SessionListAdapterTest {
     @Test
     public void onBindViewHolder_bindsSessionItemFromSpecifiedPositionToGivenViewHolder() {
         SessionListItem sessionListItem = mock(SessionListItem.class, "SessionListItem at Position 5");
-        when(mSessionList.getSession(5)).thenReturn(sessionListItem);
+        when(mSessionList.getItem(5)).thenReturn(sessionListItem);
         ViewHolder viewHolder = mock(ViewHolder.class, "ViewHolder being bound");
 
         subject.onBindViewHolder(viewHolder, 5);
