@@ -1,7 +1,10 @@
-package io.pivotal.pairwithme.viewschedule.ui;
+package io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+
+import io.pivotal.pairwithme.viewschedule.ui.model.DateHeader;
+import io.pivotal.pairwithme.viewschedule.ui.model.SessionList;
 
 public class SessionListAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -32,7 +35,7 @@ public class SessionListAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (mSessionList.getSession(position) instanceof DateHeaderViewModel) {
+        if (mSessionList.getSession(position) instanceof DateHeader) {
             return DATE_HEADER_TYPE;
         } else {
             return SESSION_TYPE;

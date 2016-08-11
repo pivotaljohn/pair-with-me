@@ -1,11 +1,10 @@
-package io.pivotal.pairwithme.viewschedule.ui;
+package io.pivotal.pairwithme.viewschedule.ui.model;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
 
-public class SessionViewModel implements ViewModel {
+public class Session implements SessionListItem {
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("MMM d @ HH:mm");
 
     private final String mName;
@@ -13,7 +12,7 @@ public class SessionViewModel implements ViewModel {
     private final DateTime mDateTime;
     private final String mDescription;
 
-    public SessionViewModel(String name, DateTime dateTime, String description) {
+    public Session(String name, DateTime dateTime, String description) {
         mName = name;
         mTime = DATE_FORMAT.print(dateTime);
         mDateTime = dateTime;

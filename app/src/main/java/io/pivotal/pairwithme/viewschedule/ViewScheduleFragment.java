@@ -11,13 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import io.pivotal.pairwithme.R;
-import io.pivotal.pairwithme.viewschedule.adapters.PairingSessionViewModelChanges;
-import io.pivotal.pairwithme.viewschedule.ui.SessionList;
-import io.pivotal.pairwithme.viewschedule.ui.SessionListAdapter;
-import io.pivotal.pairwithme.viewschedule.ui.ViewHolderCreator;
+import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionChanges;
+import io.pivotal.pairwithme.viewschedule.ui.model.SessionList;
+import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.SessionListAdapter;
+import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.ViewHolderCreator;
 
-public class ScheduleFragment extends Fragment {
-    public static final String TAG = ScheduleFragment.class.getName();
+public class ViewScheduleFragment extends Fragment {
+    public static final String TAG = ViewScheduleFragment.class.getName();
 
     @Nullable
     @Override
@@ -30,9 +30,9 @@ public class ScheduleFragment extends Fragment {
         RecyclerView.LayoutManager sessionListLayoutManager = new LinearLayoutManager(getActivity());
         sessionListView.setLayoutManager(sessionListLayoutManager);
 
-        PairingSessionViewModelChanges pairingSessionViewModelChanges = new PairingSessionViewModelChanges();
-        final SessionList sessionList = new SessionList(pairingSessionViewModelChanges.asObservable());
-        pairingSessionViewModelChanges.publish();
+        SessionChanges sessionChanges = new SessionChanges();
+        final SessionList sessionList = new SessionList(sessionChanges.asObservable());
+        sessionChanges.publish();
         RecyclerView.Adapter sessionListAdapter = new SessionListAdapter(sessionList, new ViewHolderCreator());
         sessionListView.setAdapter(sessionListAdapter);
 

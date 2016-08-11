@@ -1,19 +1,19 @@
-package io.pivotal.pairwithme;
+package io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview;
 
 import android.view.ViewGroup;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import io.pivotal.pairwithme.viewschedule.ui.DateHeaderViewModel;
-import io.pivotal.pairwithme.viewschedule.ui.SessionList;
-import io.pivotal.pairwithme.viewschedule.ui.SessionListAdapter;
-import io.pivotal.pairwithme.viewschedule.ui.DateHeaderViewHolder;
-import io.pivotal.pairwithme.viewschedule.ui.SessionViewHolder;
-import io.pivotal.pairwithme.viewschedule.ui.SessionViewModel;
-import io.pivotal.pairwithme.viewschedule.ui.ViewHolder;
-import io.pivotal.pairwithme.viewschedule.ui.ViewHolderCreator;
-import io.pivotal.pairwithme.viewschedule.ui.ViewModel;
+import io.pivotal.pairwithme.viewschedule.ui.model.DateHeader;
+import io.pivotal.pairwithme.viewschedule.ui.model.SessionList;
+import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.SessionListAdapter;
+import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.DateHeaderViewHolder;
+import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.SessionViewHolder;
+import io.pivotal.pairwithme.viewschedule.ui.model.SessionListItem;
+import io.pivotal.pairwithme.viewschedule.ui.model.Session;
+import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.ViewHolder;
+import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.ViewHolderCreator;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -52,7 +52,7 @@ public class SessionListAdapterTest {
 
     @Test
     public void getItemViewType_whenItemInSessionListIsDateHeaderViewModel_returnsDATE_HEADER_TYPE() {
-        DateHeaderViewModel dateHeader = mock(DateHeaderViewModel.class);
+        DateHeader dateHeader = mock(DateHeader.class);
         when(mSessionList.getSession(4)).thenReturn(dateHeader);
 
         assertThat(subject.getItemViewType(4), equalTo(SessionListAdapter.DATE_HEADER_TYPE));
@@ -60,7 +60,7 @@ public class SessionListAdapterTest {
 
     @Test
     public void getItemViewType_whenItemInSessionListIsSessionViewModel_returnsSESSION_TYPE() {
-        SessionViewModel session = mock(SessionViewModel.class);
+        Session session = mock(Session.class);
         when(mSessionList.getSession(4)).thenReturn(session);
 
         final int actualItemViewType = subject.getItemViewType(4);
@@ -82,13 +82,13 @@ public class SessionListAdapterTest {
 
     @Test
     public void onBindViewHolder_bindsSessionItemFromSpecifiedPositionToGivenViewHolder() {
-        ViewModel viewModel = mock(ViewModel.class, "ViewModel at Position 5");
-        when(mSessionList.getSession(5)).thenReturn(viewModel);
+        SessionListItem sessionListItem = mock(SessionListItem.class, "SessionListItem at Position 5");
+        when(mSessionList.getSession(5)).thenReturn(sessionListItem);
         ViewHolder viewHolder = mock(ViewHolder.class, "ViewHolder being bound");
 
         subject.onBindViewHolder(viewHolder, 5);
 
-        verify(viewHolder).setViewModel(viewModel);
+        verify(viewHolder).setViewModel(sessionListItem);
     }
 
 }

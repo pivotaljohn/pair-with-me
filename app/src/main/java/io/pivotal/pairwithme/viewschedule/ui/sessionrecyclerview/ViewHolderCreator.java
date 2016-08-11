@@ -1,4 +1,4 @@
-package io.pivotal.pairwithme.viewschedule.ui;
+package io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;

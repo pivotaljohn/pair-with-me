@@ -19,12 +19,12 @@ public class ViewScheduleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_schedule);
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
-        ScheduleFragment scheduleFragment = (ScheduleFragment) fragmentManager.findFragmentByTag(ScheduleFragment.TAG);
+        ViewScheduleFragment viewScheduleFragment = (ViewScheduleFragment) fragmentManager.findFragmentByTag(ViewScheduleFragment.TAG);
 
-        if(scheduleFragment == null) {
-            scheduleFragment = new ScheduleFragment();
+        if(viewScheduleFragment == null) {
+            viewScheduleFragment = new ViewScheduleFragment();
             final FragmentTransaction tx = fragmentManager.beginTransaction();
-            tx.add(R.id.view_schedule_screen, scheduleFragment, ScheduleFragment.TAG);
+            tx.add(R.id.view_schedule_screen, viewScheduleFragment, ViewScheduleFragment.TAG);
             tx.commit();
         }
 

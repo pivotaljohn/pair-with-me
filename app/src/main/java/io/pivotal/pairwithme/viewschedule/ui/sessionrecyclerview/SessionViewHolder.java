@@ -1,11 +1,12 @@
-package io.pivotal.pairwithme.viewschedule.ui;
+package io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview;
 
 import android.view.View;
 import android.widget.TextView;
 
 import io.pivotal.pairwithme.R;
+import io.pivotal.pairwithme.viewschedule.ui.model.Session;
 
-public class SessionViewHolder extends ViewHolder<SessionViewModel> {
+public class SessionViewHolder extends ViewHolder<Session> {
     private TextView sessionTimeTextView;
     private TextView pairNameTextView;
     private TextView sessionDetailTextView;
@@ -17,7 +18,7 @@ public class SessionViewHolder extends ViewHolder<SessionViewModel> {
         pairNameTextView = (TextView) itemView.findViewById(R.id.pair_name);
     }
 
-    public void setViewModel(SessionViewModel model) {
+    public void setViewModel(Session model) {
         sessionTimeTextView.setText(model.getTime());
         pairNameTextView.setText(model.getName());
         sessionDetailTextView.setText(model.getDescription());
