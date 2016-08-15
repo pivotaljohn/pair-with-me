@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Change;
+import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Delete;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Insert;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -73,5 +74,25 @@ public class SessionListTest {
 
     @Test
     @Ignore
-    public void onSessionDeleted_whenLastOneForThatDate_removesTheDateHeaderToo() {}
+    public void onSessionDeleted_whenLastOneForThatDate_removesTheDateHeaderToo() {
+        PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
+        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+        List<SessionListItem> nonEmptyList = new LinkedList<>();
+        nonEmptyList.add(new DateHeader("February 2, 2016"));
+        nonEmptyList.add(new Session("Karen", DateTime.parse("2016-02-02T10:00:00Z"), "Only session on the 2nd."));
+        nonEmptyList.add(new DateHeader("February 3, 2016"));
+        nonEmptyList.add(new Session("Kevin", DateTime.parse("2016-02-03T10:00:00Z"), "Only session on the 3rd."));
+        subject.new TestHarness().setList(nonEmptyList);
+
+        fakeSessionViewModelChanges.onNext(new Delete(new Session("Kevin", DateTime.parse("2016-02-02T11:00:00Z"), "Second session on this day.")));
+
+        assertThat(subject.getSessionCount(), equalTo(3));
+        assertThat(subject.getItem(0), instanceOf(DateHeader.class));
+        assertThat(subject.getItem(1), instanceOf(Session.class));
+        assertThat(subject.getItem(2), instanceOf(Session.class));
+        assertThat(((DateHeader) subject.getItem(0)).getDate(), equalTo("February 2, 2016"));
+        assertThat(((Session) subject.getItem(1)).getName(), equalTo("Karen"));
+        assertThat(((Session) subject.getItem(2)).getName(), equalTo("Kevin"));
+
+    }
 }
