@@ -45,6 +45,7 @@ public class SessionList {
 
     private void applyUpdate(Update update) {
         ListIterator<SessionListItem> items = theList.listIterator();
+        boolean sessionFound = false;
         while (items.hasNext()) {
             SessionListItem currentItem = items.next();
             if (currentItem instanceof DateHeader) {
@@ -53,8 +54,12 @@ public class SessionList {
             Session currentSession = (Session) currentItem;
             if (currentSession.getId() == update.getTarget().getId()) {
                 items.set(update.getTarget());
+                sessionFound = true;
                 break;
             }
+        }
+        if(!sessionFound) {
+            insertChange(new Insert(update.getTarget()));
         }
     }
 

@@ -145,4 +145,22 @@ public class SessionListTest {
         assertThat(((Session) subject.getItem(1)).getDateTime(), equalTo(DateTime.parse("2002-02-02T02:02:02Z")));
         assertThat(((Session) subject.getItem(1)).getDescription(), equalTo("Updated Session."));
     }
+
+    @Test
+    public void whenSessionUpdated_andSessionIsNotInTheList_addsItToTheList() {
+        PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
+        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+        List<SessionListItem> nonEmptyList = new LinkedList<>();
+        nonEmptyList.add(new DateHeader("January 2, 2016"));
+        nonEmptyList.add(new Session(1, "Early Eddie", DateTime.parse("2016-01-02T00:00:00Z"), "Getting the worm"));
+        subject.new TestHarness().setList(nonEmptyList);
+
+        fakeSessionViewModelChanges.onNext(new Update(new Session(2, "Late Larry", DateTime.parse("2016-12-31T13:01:00Z"), "Waking Up")));
+
+        assertThat(subject.getItemCount(), equalTo(4));
+        assertThat(subject.getItem(2), instanceOf(DateHeader.class));
+        assertThat(subject.getItem(3), instanceOf(Session.class));
+        assertThat(((DateHeader) subject.getItem(2)).getDate(), equalTo("December 31, 2016"));
+        assertThat(((Session) subject.getItem(3)).getId(), equalTo(2L));
+    }
 }
