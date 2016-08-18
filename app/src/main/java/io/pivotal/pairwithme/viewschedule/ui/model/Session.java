@@ -7,16 +7,22 @@ import org.joda.time.format.DateTimeFormatter;
 public class Session implements SessionListItem {
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("MMM d @ HH:mm");
 
+    private final long mId;
     private final String mName;
     private final String mTime;
     private final DateTime mDateTime;
     private final String mDescription;
 
-    public Session(String name, DateTime dateTime, String description) {
+    public Session(long id, String name, DateTime dateTime, String description) {
+        mId = id;
         mName = name;
         mTime = DATE_FORMAT.print(dateTime);
         mDateTime = dateTime;
         mDescription = description;
+    }
+
+    public long getId() {
+        return mId;
     }
 
     public String getName() {

@@ -21,7 +21,7 @@ public class SessionListAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mSessionList.getSessionCount();
+        return mSessionList.getItemCount();
     }
 
     @Override

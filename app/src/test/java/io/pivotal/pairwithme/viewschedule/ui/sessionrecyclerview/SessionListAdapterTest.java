@@ -38,10 +38,10 @@ public class SessionListAdapterTest {
 
     @Test
     public void getItemCount_returnsSizeOfSessionList() {
-        when(mSessionList.getSessionCount()).thenReturn(0);
+        when(mSessionList.getItemCount()).thenReturn(0);
         assertThat(subject.getItemCount(), equalTo(0));
 
-        when(mSessionList.getSessionCount()).thenReturn(5);
+        when(mSessionList.getItemCount()).thenReturn(5);
         assertThat(subject.getItemCount(), equalTo(5));
     }
 

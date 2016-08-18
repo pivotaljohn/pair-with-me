@@ -18,7 +18,7 @@ public class SessionChanges {
     }
 
     public void publish() {
-        subject.onNext(new Insert(new Session("John Doe", DateTime.parse("2016-02-01T13:01:00Z"), "JavaScript")));
+        subject.onNext(new Insert(new Session(1, "John Doe", DateTime.parse("2016-02-01T13:01:00Z"), "JavaScript")));
     }
 
 }
