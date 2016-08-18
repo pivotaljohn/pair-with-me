@@ -52,7 +52,7 @@ public class SessionList {
                 currentItem = items.next();
             }
             Session currentSession = (Session) currentItem;
-            if (currentSession.getId() == update.getTarget().getId()) {
+            if (currentSession.getId().equals(update.getTarget().getId())) {
                 items.set(update.getTarget());
                 sessionFound = true;
                 break;
@@ -72,7 +72,7 @@ public class SessionList {
                 currentItem = items.next();
             }
             Session currentSession = (Session) currentItem;
-            if (currentSession.getId() == deletion.getSessionId()) {
+            if (currentSession.getId().equals(deletion.getSessionId())) {
                 sessionToDelete = items.previousIndex();
                 break;
             }

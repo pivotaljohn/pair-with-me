@@ -23,12 +23,12 @@ public class SessionListTest {
     @Test
     public void whenSessionInserted_addsItToTheList() {
         List<Change<Session>> changes = new LinkedList<>();
-        changes.add(new Insert(new Session(1, "John Doe", DateTime.parse("2016-01-01T13:01:00Z"), "JavaScript")));
+        changes.add(new Insert(new Session("1", "John Doe", DateTime.parse("2016-01-01T13:01:00Z"), "JavaScript")));
         Observable<Change<Session>> fakeSessionViewModelChanges = Observable.from(changes);
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
 
         assertThat(subject.getItemCount(), equalTo(2));
-        assertThat(((Session) subject.getItem(1)).getId(), equalTo(1L));
+        assertThat(((Session) subject.getItem(1)).getId(), equalTo("1"));
         assertThat(((Session) subject.getItem(1)).getName(), equalTo("John Doe"));
         assertThat(((Session) subject.getItem(1)).getDateTime(), equalTo(DateTime.parse("2016-01-01T13:01:00Z")));
         assertThat(((Session) subject.getItem(1)).getDescription(), equalTo("JavaScript"));
@@ -40,16 +40,16 @@ public class SessionListTest {
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("January 2, 2016"));
-        nonEmptyList.add(new Session(1, "Early Eddie", DateTime.parse("2016-01-02T00:00:00Z"), "Getting the worm"));
+        nonEmptyList.add(new Session("1", "Early Eddie", DateTime.parse("2016-01-02T00:00:00Z"), "Getting the worm"));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Insert(new Session(2, "Late Larry", DateTime.parse("2016-12-31T13:01:00Z"), "Waking Up")));
+        fakeSessionViewModelChanges.onNext(new Insert(new Session("2", "Late Larry", DateTime.parse("2016-12-31T13:01:00Z"), "Waking Up")));
 
         assertThat(subject.getItemCount(), equalTo(4));
         assertThat(subject.getItem(2), instanceOf(DateHeader.class));
         assertThat(subject.getItem(3), instanceOf(Session.class));
         assertThat(((DateHeader) subject.getItem(2)).getDate(), equalTo("December 31, 2016"));
-        assertThat(((Session) subject.getItem(3)).getId(), equalTo(2L));
+        assertThat(((Session) subject.getItem(3)).getId(), equalTo("2"));
     }
 
     @Test
@@ -58,18 +58,18 @@ public class SessionListTest {
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("February 2, 2016"));
-        nonEmptyList.add(new Session(1, "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "First session on this day."));
+        nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "First session on this day."));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Insert(new Session(2, "Kevin", DateTime.parse("2016-02-02T11:00:00Z"), "Second session on this day.")));
+        fakeSessionViewModelChanges.onNext(new Insert(new Session("2", "Kevin", DateTime.parse("2016-02-02T11:00:00Z"), "Second session on this day.")));
 
         assertThat(subject.getItemCount(), equalTo(3));
         assertThat(subject.getItem(0), instanceOf(DateHeader.class));
         assertThat(subject.getItem(1), instanceOf(Session.class));
         assertThat(subject.getItem(2), instanceOf(Session.class));
         assertThat(((DateHeader) subject.getItem(0)).getDate(), equalTo("February 2, 2016"));
-        assertThat(((Session) subject.getItem(1)).getId(), equalTo(1L));
-        assertThat(((Session) subject.getItem(2)).getId(), equalTo(2L));
+        assertThat(((Session) subject.getItem(1)).getId(), equalTo("1"));
+        assertThat(((Session) subject.getItem(2)).getId(), equalTo("2"));
     }
 
     @Test
@@ -78,14 +78,14 @@ public class SessionListTest {
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("February 2, 2016"));
-        nonEmptyList.add(new Session(1, "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "1st session on the 2nd."));
-        nonEmptyList.add(new Session(2, "Kevin", DateTime.parse("2016-02-02T10:00:00Z"), "2nd session on the 2rd."));
+        nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "1st session on the 2nd."));
+        nonEmptyList.add(new Session("2", "Kevin", DateTime.parse("2016-02-02T10:00:00Z"), "2nd session on the 2rd."));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Delete(2));
+        fakeSessionViewModelChanges.onNext(new Delete("2"));
 
         assertThat(subject.getItemCount(), equalTo(2));
-        assertThat(((Session) subject.getItem(1)).getId(), equalTo(1L));
+        assertThat(((Session) subject.getItem(1)).getId(), equalTo("1"));
     }
 
     @Test
@@ -94,18 +94,18 @@ public class SessionListTest {
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("February 2, 2016"));
-        nonEmptyList.add(new Session(1, "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "1st session on the 2nd."));
-        nonEmptyList.add(new Session(2, "Kevin", DateTime.parse("2016-02-02T10:00:00Z"), "2nd session on the 2rd."));
+        nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "1st session on the 2nd."));
+        nonEmptyList.add(new Session("2", "Kevin", DateTime.parse("2016-02-02T10:00:00Z"), "2nd session on the 2rd."));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Delete(99));
+        fakeSessionViewModelChanges.onNext(new Delete("99"));
 
         assertThat(subject.getItemCount(), equalTo(3));
         assertThat(subject.getItem(0), instanceOf(DateHeader.class));
         assertThat(subject.getItem(1), instanceOf(Session.class));
         assertThat(subject.getItem(2), instanceOf(Session.class));
-        assertThat(((Session) subject.getItem(1)).getId(), equalTo(1L));
-        assertThat(((Session) subject.getItem(2)).getId(), equalTo(2L));
+        assertThat(((Session) subject.getItem(1)).getId(), equalTo("1"));
+        assertThat(((Session) subject.getItem(2)).getId(), equalTo("2"));
     }
 
     @Test
@@ -114,12 +114,12 @@ public class SessionListTest {
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("February 2, 2016"));
-        nonEmptyList.add(new Session(1, "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "Only session on the 2nd."));
+        nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "Only session on the 2nd."));
         nonEmptyList.add(new DateHeader("February 3, 2016"));
-        nonEmptyList.add(new Session(2, "Kevin", DateTime.parse("2016-02-03T10:00:00Z"), "Only session on the 3rd."));
+        nonEmptyList.add(new Session("2", "Kevin", DateTime.parse("2016-02-03T10:00:00Z"), "Only session on the 3rd."));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Delete(2));
+        fakeSessionViewModelChanges.onNext(new Delete("2"));
 
         assertThat(subject.getItemCount(), equalTo(2));
         assertThat(subject.getItem(0), instanceOf(DateHeader.class));
@@ -134,13 +134,13 @@ public class SessionListTest {
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("February 2, 2016"));
-        nonEmptyList.add(new Session(1, "Karen", DateTime.parse("2001-01-01T01:01:01Z"), "Original Session."));
+        nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2001-01-01T01:01:01Z"), "Original Session."));
         subject.new TestHarness().setList(nonEmptyList);
 
         fakeSessionViewModelChanges.onNext(new Update(
-                new Session(1, "Kevin", DateTime.parse("2002-02-02T02:02:02Z"), "Updated Session.")));
+                new Session("1", "Kevin", DateTime.parse("2002-02-02T02:02:02Z"), "Updated Session.")));
 
-        assertThat(((Session) subject.getItem(1)).getId(), equalTo(1L));
+        assertThat(((Session) subject.getItem(1)).getId(), equalTo("1"));
         assertThat(((Session) subject.getItem(1)).getName(), equalTo("Kevin"));
         assertThat(((Session) subject.getItem(1)).getDateTime(), equalTo(DateTime.parse("2002-02-02T02:02:02Z")));
         assertThat(((Session) subject.getItem(1)).getDescription(), equalTo("Updated Session."));
@@ -152,15 +152,15 @@ public class SessionListTest {
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("January 2, 2016"));
-        nonEmptyList.add(new Session(1, "Early Eddie", DateTime.parse("2016-01-02T00:00:00Z"), "Getting the worm"));
+        nonEmptyList.add(new Session("1", "Early Eddie", DateTime.parse("2016-01-02T00:00:00Z"), "Getting the worm"));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Update(new Session(2, "Late Larry", DateTime.parse("2016-12-31T13:01:00Z"), "Waking Up")));
+        fakeSessionViewModelChanges.onNext(new Update(new Session("2", "Late Larry", DateTime.parse("2016-12-31T13:01:00Z"), "Waking Up")));
 
         assertThat(subject.getItemCount(), equalTo(4));
         assertThat(subject.getItem(2), instanceOf(DateHeader.class));
         assertThat(subject.getItem(3), instanceOf(Session.class));
         assertThat(((DateHeader) subject.getItem(2)).getDate(), equalTo("December 31, 2016"));
-        assertThat(((Session) subject.getItem(3)).getId(), equalTo(2L));
+        assertThat(((Session) subject.getItem(3)).getId(), equalTo("2"));
     }
 }
