@@ -10,6 +10,7 @@ import java.util.List;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Change;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Delete;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Insert;
+import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Update;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -84,8 +85,6 @@ public class SessionListTest {
         fakeSessionViewModelChanges.onNext(new Delete(2));
 
         assertThat(subject.getItemCount(), equalTo(2));
-        assertThat(subject.getItem(0), instanceOf(DateHeader.class));
-        assertThat(subject.getItem(1), instanceOf(Session.class));
         assertThat(((Session) subject.getItem(1)).getId(), equalTo(1L));
     }
 
@@ -127,5 +126,23 @@ public class SessionListTest {
         assertThat(subject.getItem(1), instanceOf(Session.class));
         assertThat(((DateHeader) subject.getItem(0)).getDate(), equalTo("February 2, 2016"));
         assertThat(((Session) subject.getItem(1)).getName(), equalTo("Karen"));
+    }
+
+    @Test
+    public void whenSessionUpdated_updatesTheSameSessionInTheList() {
+        PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
+        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+        List<SessionListItem> nonEmptyList = new LinkedList<>();
+        nonEmptyList.add(new DateHeader("February 2, 2016"));
+        nonEmptyList.add(new Session(1, "Karen", DateTime.parse("2001-01-01T01:01:01Z"), "Original Session."));
+        subject.new TestHarness().setList(nonEmptyList);
+
+        fakeSessionViewModelChanges.onNext(new Update(
+                new Session(1, "Kevin", DateTime.parse("2002-02-02T02:02:02Z"), "Updated Session.")));
+
+        assertThat(((Session) subject.getItem(1)).getId(), equalTo(1L));
+        assertThat(((Session) subject.getItem(1)).getName(), equalTo("Kevin"));
+        assertThat(((Session) subject.getItem(1)).getDateTime(), equalTo(DateTime.parse("2002-02-02T02:02:02Z")));
+        assertThat(((Session) subject.getItem(1)).getDescription(), equalTo("Updated Session."));
     }
 }

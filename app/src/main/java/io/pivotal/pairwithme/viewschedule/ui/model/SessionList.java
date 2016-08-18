@@ -9,6 +9,7 @@ import java.util.ListIterator;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Change;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Delete;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Insert;
+import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Update;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -36,6 +37,23 @@ public class SessionList {
                 insertChange(sessionChange);
             } else if (sessionChange instanceof Delete) {
                 applyDelete((Delete) sessionChange);
+            } else if (sessionChange instanceof Update) {
+                applyUpdate((Update) sessionChange);
+            }
+        }
+    }
+
+    private void applyUpdate(Update update) {
+        ListIterator<SessionListItem> items = theList.listIterator();
+        while (items.hasNext()) {
+            SessionListItem currentItem = items.next();
+            if (currentItem instanceof DateHeader) {
+                currentItem = items.next();
+            }
+            Session currentSession = (Session) currentItem;
+            if (currentSession.getId() == update.getTarget().getId()) {
+                items.set(update.getTarget());
+                break;
             }
         }
     }
