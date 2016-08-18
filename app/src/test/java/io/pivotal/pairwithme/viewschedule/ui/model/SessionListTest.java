@@ -90,6 +90,26 @@ public class SessionListTest {
     }
 
     @Test
+    public void onSessionDeleted_whenSessionIsNotInTheList_doesNothing() {
+        PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
+        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+        List<SessionListItem> nonEmptyList = new LinkedList<>();
+        nonEmptyList.add(new DateHeader("February 2, 2016"));
+        nonEmptyList.add(new Session(1, "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "1st session on the 2nd."));
+        nonEmptyList.add(new Session(2, "Kevin", DateTime.parse("2016-02-02T10:00:00Z"), "2nd session on the 2rd."));
+        subject.new TestHarness().setList(nonEmptyList);
+
+        fakeSessionViewModelChanges.onNext(new Delete(99));
+
+        assertThat(subject.getItemCount(), equalTo(3));
+        assertThat(subject.getItem(0), instanceOf(DateHeader.class));
+        assertThat(subject.getItem(1), instanceOf(Session.class));
+        assertThat(subject.getItem(2), instanceOf(Session.class));
+        assertThat(((Session) subject.getItem(1)).getId(), equalTo(1L));
+        assertThat(((Session) subject.getItem(2)).getId(), equalTo(2L));
+    }
+
+    @Test
     @Ignore
     public void onSessionDeleted_whenLastOneForThatDate_removesTheDateHeaderToo() {
         PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();

@@ -42,6 +42,7 @@ public class SessionList {
 
     private void applyDelete(Delete deletion) {
         ListIterator<SessionListItem> items = theList.listIterator();
+        int sessionToDelete = -1;
         while (items.hasNext()) {
             SessionListItem currentItem = items.next();
             if (currentItem instanceof DateHeader) {
@@ -49,12 +50,13 @@ public class SessionList {
             }
             Session currentSession = (Session) currentItem;
             if (currentSession.getId() == deletion.getSessionId()) {
+                sessionToDelete = items.previousIndex();
                 break;
             }
         }
-        int sessionToDelete = items.previousIndex();
-
-        theList.remove(sessionToDelete);
+        if(sessionToDelete != -1) {
+            theList.remove(sessionToDelete);
+        }
     }
 
     private void insertChange(Change<Session> sessionChange) {
