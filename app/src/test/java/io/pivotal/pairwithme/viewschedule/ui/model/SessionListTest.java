@@ -72,7 +72,7 @@ public class SessionListTest {
     }
 
     @Test
-    public void onSessionDeleted_removesItFromTheList() {
+    public void whenSessionDeleted_removesItFromTheList() {
         PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
@@ -90,7 +90,7 @@ public class SessionListTest {
     }
 
     @Test
-    public void onSessionDeleted_whenSessionIsNotInTheList_doesNothing() {
+    public void whenSessionDeleted_whenSessionIsNotInTheList_doesNothing() {
         PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
@@ -110,7 +110,7 @@ public class SessionListTest {
     }
 
     @Test
-    public void onSessionDeleted_whenLastOneForThatDate_removesTheDateHeaderToo() {
+    public void whenSessionDeleted_whenLastOneForThatDate_removesTheDateHeaderToo() {
         PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
