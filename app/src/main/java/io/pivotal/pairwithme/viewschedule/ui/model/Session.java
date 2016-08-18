@@ -4,8 +4,12 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 public class Session implements SessionListItem {
-    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("MMM d @ HH:mm");
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("h:mma");
 
     private final String mId;
     private final String mName;
@@ -16,7 +20,7 @@ public class Session implements SessionListItem {
     public Session(String id, String name, DateTime dateTime, String description) {
         mId = id;
         mName = name;
-        mTime = DATE_FORMAT.print(dateTime);
+        mTime = DATE_FORMAT.print(dateTime).replace("AM", "a").replace("PM","p");
         mDateTime = dateTime;
         mDescription = description;
     }

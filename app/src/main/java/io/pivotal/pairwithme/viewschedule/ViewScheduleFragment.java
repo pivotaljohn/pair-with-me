@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import io.pivotal.pairwithme.R;
+import io.pivotal.pairwithme.domain.PairingSessionChange;
+import io.pivotal.pairwithme.domain.PairingSessionChanges;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionChanges;
 import io.pivotal.pairwithme.viewschedule.ui.model.SessionList;
 import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.SessionListAdapter;
@@ -30,9 +32,12 @@ public class ViewScheduleFragment extends Fragment {
         RecyclerView.LayoutManager sessionListLayoutManager = new LinearLayoutManager(getActivity());
         sessionListView.setLayoutManager(sessionListLayoutManager);
 
-        SessionChanges sessionChanges = new SessionChanges();
+        PairingSessionChanges pairingSessionChanges = new PairingSessionChanges();
+        SessionChanges sessionChanges = new SessionChanges(pairingSessionChanges.asObservable());
         final SessionList sessionList = new SessionList(sessionChanges.asObservable());
-        sessionChanges.publish();
+
+        pairingSessionChanges.publish();
+
         RecyclerView.Adapter sessionListAdapter = new SessionListAdapter(sessionList, new ViewHolderCreator());
         sessionListView.setAdapter(sessionListAdapter);
 
