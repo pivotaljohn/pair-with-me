@@ -17,7 +17,12 @@ public class ViewScheduleActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_schedule);
+        setupFragment();
 
+        Log.d(TAG, "onCreate() returned");
+    }
+
+    private void setupFragment() {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         ViewScheduleFragment viewScheduleFragment = (ViewScheduleFragment) fragmentManager.findFragmentByTag(ViewScheduleFragment.TAG);
 
@@ -27,7 +32,5 @@ public class ViewScheduleActivity extends AppCompatActivity {
             tx.add(R.id.view_schedule_screen, viewScheduleFragment, ViewScheduleFragment.TAG);
             tx.commit();
         }
-
-        Log.d(TAG, "onCreate() returned");
     }
 }
