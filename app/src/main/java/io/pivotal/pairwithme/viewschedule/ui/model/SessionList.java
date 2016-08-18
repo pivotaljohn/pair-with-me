@@ -54,8 +54,15 @@ public class SessionList {
                 break;
             }
         }
-        if(sessionToDelete != -1) {
+        if (sessionToDelete != -1) {
             theList.remove(sessionToDelete);
+
+            if (theList.get(sessionToDelete - 1) instanceof DateHeader) {
+                if (theList.size() <= sessionToDelete ||
+                        (theList.size() > sessionToDelete && theList.get(sessionToDelete) instanceof DateHeader)) {
+                    theList.remove(sessionToDelete - 1);
+                }
+            }
         }
     }
 

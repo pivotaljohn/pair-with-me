@@ -110,7 +110,6 @@ public class SessionListTest {
     }
 
     @Test
-    @Ignore
     public void onSessionDeleted_whenLastOneForThatDate_removesTheDateHeaderToo() {
         PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
