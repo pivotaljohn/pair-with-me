@@ -2,10 +2,10 @@ package io.pivotal.pairwithme.viewschedule.ui.sessionchanges;
 
 import io.pivotal.pairwithme.viewschedule.ui.model.Session;
 
-public class Update extends Change<Session> {
+public class SessionUpdate extends SessionChange {
     private final Session mUpdatedSession;
 
-    public Update(Session updatedSession) {
+    public SessionUpdate(Session updatedSession) {
         mUpdatedSession = updatedSession;
     }
 

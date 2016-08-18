@@ -6,17 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Change;
-import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Delete;
-import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Insert;
-import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Update;
+import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionChange;
+import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionDelete;
+import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionInsert;
+import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionUpdate;
 import rx.Observable;
 import rx.functions.Action1;
 
 public class SessionList {
     private List<SessionListItem> theList;
 
-    public SessionList(final Observable<Change<Session>> sessionChanges) {
+    public SessionList(final Observable<SessionChange> sessionChanges) {
         theList = new ArrayList<>();
         sessionChanges.subscribe(new SessionChangeSubscriber());
     }
@@ -29,21 +29,21 @@ public class SessionList {
         return theList.get(position);
     }
 
-    private class SessionChangeSubscriber implements Action1<Change<Session>> {
+    private class SessionChangeSubscriber implements Action1<SessionChange> {
 
         @Override
-        public void call(final Change<Session> sessionChange) {
-            if (sessionChange instanceof Insert) {
+        public void call(final SessionChange sessionChange) {
+            if (sessionChange instanceof SessionInsert) {
                 insertChange(sessionChange);
-            } else if (sessionChange instanceof Delete) {
-                applyDelete((Delete) sessionChange);
-            } else if (sessionChange instanceof Update) {
-                applyUpdate((Update) sessionChange);
+            } else if (sessionChange instanceof SessionDelete) {
+                applyDelete((SessionDelete) sessionChange);
+            } else if (sessionChange instanceof SessionUpdate) {
+                applyUpdate((SessionUpdate) sessionChange);
             }
         }
     }
 
-    private void applyUpdate(Update update) {
+    private void applyUpdate(SessionUpdate sessionUpdate) {
         ListIterator<SessionListItem> items = theList.listIterator();
         boolean sessionFound = false;
         while (items.hasNext()) {
@@ -52,18 +52,18 @@ public class SessionList {
                 currentItem = items.next();
             }
             Session currentSession = (Session) currentItem;
-            if (currentSession.getId().equals(update.getTarget().getId())) {
-                items.set(update.getTarget());
+            if (currentSession.getId().equals(sessionUpdate.getTarget().getId())) {
+                items.set(sessionUpdate.getTarget());
                 sessionFound = true;
                 break;
             }
         }
         if(!sessionFound) {
-            insertChange(new Insert(update.getTarget()));
+            insertChange(new SessionInsert(sessionUpdate.getTarget()));
         }
     }
 
-    private void applyDelete(Delete deletion) {
+    private void applyDelete(SessionDelete deletion) {
         ListIterator<SessionListItem> items = theList.listIterator();
         int sessionToDelete = -1;
         while (items.hasNext()) {
@@ -89,7 +89,7 @@ public class SessionList {
         }
     }
 
-    private void insertChange(Change<Session> sessionChange) {
+    private void insertChange(SessionChange sessionChange) {
         Session newSession = sessionChange.getTarget();
         boolean isOnlySessionForDate = true;
         Interval newSessionDay = new Interval(newSession.getDateTime().withTimeAtStartOfDay(),

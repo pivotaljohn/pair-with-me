@@ -7,18 +7,18 @@ import rx.Observable;
 import rx.subjects.PublishSubject;
 
 public class SessionChanges {
-    private PublishSubject<Change<Session>> subject;
+    private PublishSubject<SessionChange> subject;
 
     public SessionChanges() {
         subject = PublishSubject.create();
     }
 
-    public Observable<Change<Session>> asObservable() {
+    public Observable<SessionChange> asObservable() {
         return subject;
     }
 
     public void publish() {
-        subject.onNext(new Insert(new Session("1", "John Doe", DateTime.parse("2016-02-01T13:01:00Z"), "JavaScript")));
+        subject.onNext(new SessionInsert(new Session("1", "Tommy Orr", DateTime.parse("2016-02-01T13:01:00Z"), "JavaScript")));
     }
 
 }

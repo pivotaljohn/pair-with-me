@@ -1,16 +1,15 @@
 package io.pivotal.pairwithme.viewschedule.ui.model;
 
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Change;
-import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Delete;
-import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Insert;
-import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.Update;
+import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionChange;
+import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionDelete;
+import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionInsert;
+import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionUpdate;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -22,9 +21,9 @@ public class SessionListTest {
 
     @Test
     public void whenSessionInserted_addsItToTheList() {
-        List<Change<Session>> changes = new LinkedList<>();
-        changes.add(new Insert(new Session("1", "John Doe", DateTime.parse("2016-01-01T13:01:00Z"), "JavaScript")));
-        Observable<Change<Session>> fakeSessionViewModelChanges = Observable.from(changes);
+        List<SessionChange> sessionChanges = new LinkedList<>();
+        sessionChanges.add(new SessionInsert(new Session("1", "John Doe", DateTime.parse("2016-01-01T13:01:00Z"), "JavaScript")));
+        Observable<SessionChange> fakeSessionViewModelChanges = Observable.from(sessionChanges);
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
 
         assertThat(subject.getItemCount(), equalTo(2));
@@ -36,14 +35,14 @@ public class SessionListTest {
 
     @Test
     public void whenSessionInserted_andSessionOccursOnANewDate_alsoAddsANewDateHeader() {
-        PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
+        PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("January 2, 2016"));
         nonEmptyList.add(new Session("1", "Early Eddie", DateTime.parse("2016-01-02T00:00:00Z"), "Getting the worm"));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Insert(new Session("2", "Late Larry", DateTime.parse("2016-12-31T13:01:00Z"), "Waking Up")));
+        fakeSessionViewModelChanges.onNext(new SessionInsert(new Session("2", "Late Larry", DateTime.parse("2016-12-31T13:01:00Z"), "Waking Up")));
 
         assertThat(subject.getItemCount(), equalTo(4));
         assertThat(subject.getItem(2), instanceOf(DateHeader.class));
@@ -54,14 +53,14 @@ public class SessionListTest {
 
     @Test
     public void whenSessionInserted_andSessionOccursOnAnExistingDate_putsSessionUnderExistingDateHeader() {
-        PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
+        PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("February 2, 2016"));
         nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "First session on this day."));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Insert(new Session("2", "Kevin", DateTime.parse("2016-02-02T11:00:00Z"), "Second session on this day.")));
+        fakeSessionViewModelChanges.onNext(new SessionInsert(new Session("2", "Kevin", DateTime.parse("2016-02-02T11:00:00Z"), "Second session on this day.")));
 
         assertThat(subject.getItemCount(), equalTo(3));
         assertThat(subject.getItem(0), instanceOf(DateHeader.class));
@@ -74,7 +73,7 @@ public class SessionListTest {
 
     @Test
     public void whenSessionDeleted_removesItFromTheList() {
-        PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
+        PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("February 2, 2016"));
@@ -82,7 +81,7 @@ public class SessionListTest {
         nonEmptyList.add(new Session("2", "Kevin", DateTime.parse("2016-02-02T10:00:00Z"), "2nd session on the 2rd."));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Delete("2"));
+        fakeSessionViewModelChanges.onNext(new SessionDelete("2"));
 
         assertThat(subject.getItemCount(), equalTo(2));
         assertThat(((Session) subject.getItem(1)).getId(), equalTo("1"));
@@ -90,7 +89,7 @@ public class SessionListTest {
 
     @Test
     public void whenSessionDeleted_whenSessionIsNotInTheList_doesNothing() {
-        PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
+        PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("February 2, 2016"));
@@ -98,7 +97,7 @@ public class SessionListTest {
         nonEmptyList.add(new Session("2", "Kevin", DateTime.parse("2016-02-02T10:00:00Z"), "2nd session on the 2rd."));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Delete("99"));
+        fakeSessionViewModelChanges.onNext(new SessionDelete("99"));
 
         assertThat(subject.getItemCount(), equalTo(3));
         assertThat(subject.getItem(0), instanceOf(DateHeader.class));
@@ -110,7 +109,7 @@ public class SessionListTest {
 
     @Test
     public void whenSessionDeleted_whenLastOneForThatDate_removesTheDateHeaderToo() {
-        PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
+        PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("February 2, 2016"));
@@ -119,7 +118,7 @@ public class SessionListTest {
         nonEmptyList.add(new Session("2", "Kevin", DateTime.parse("2016-02-03T10:00:00Z"), "Only session on the 3rd."));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Delete("2"));
+        fakeSessionViewModelChanges.onNext(new SessionDelete("2"));
 
         assertThat(subject.getItemCount(), equalTo(2));
         assertThat(subject.getItem(0), instanceOf(DateHeader.class));
@@ -130,14 +129,14 @@ public class SessionListTest {
 
     @Test
     public void whenSessionUpdated_updatesTheSameSessionInTheList() {
-        PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
+        PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("February 2, 2016"));
         nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2001-01-01T01:01:01Z"), "Original Session."));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Update(
+        fakeSessionViewModelChanges.onNext(new SessionUpdate(
                 new Session("1", "Kevin", DateTime.parse("2002-02-02T02:02:02Z"), "Updated Session.")));
 
         assertThat(((Session) subject.getItem(1)).getId(), equalTo("1"));
@@ -148,14 +147,14 @@ public class SessionListTest {
 
     @Test
     public void whenSessionUpdated_andSessionIsNotInTheList_addsItToTheList() {
-        PublishSubject<Change<Session>> fakeSessionViewModelChanges = PublishSubject.create();
+        PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
         nonEmptyList.add(new DateHeader("January 2, 2016"));
         nonEmptyList.add(new Session("1", "Early Eddie", DateTime.parse("2016-01-02T00:00:00Z"), "Getting the worm"));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new Update(new Session("2", "Late Larry", DateTime.parse("2016-12-31T13:01:00Z"), "Waking Up")));
+        fakeSessionViewModelChanges.onNext(new SessionUpdate(new Session("2", "Late Larry", DateTime.parse("2016-12-31T13:01:00Z"), "Waking Up")));
 
         assertThat(subject.getItemCount(), equalTo(4));
         assertThat(subject.getItem(2), instanceOf(DateHeader.class));

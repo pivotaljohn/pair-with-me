@@ -2,10 +2,10 @@ package io.pivotal.pairwithme.viewschedule.ui.sessionchanges;
 
 import io.pivotal.pairwithme.viewschedule.ui.model.Session;
 
-public class Delete extends Change<Session> {
+public class SessionDelete extends SessionChange {
     private final String mSessionId;
 
-    public Delete(String sessionId) {
+    public SessionDelete(String sessionId) {
         super();
         mSessionId = sessionId;
     }
