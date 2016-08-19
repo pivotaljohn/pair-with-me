@@ -95,26 +95,26 @@ public class SessionList {
         Interval newSessionDay = new Interval(newSession.getDateTime().withTimeAtStartOfDay(),
                 newSession.getDateTime().plusDays(1).withTimeAtStartOfDay());
 
+        int currentIndex = -1;
         ListIterator<SessionListItem> items = theList.listIterator();
         while (items.hasNext()) {
+            currentIndex = items.nextIndex();
             SessionListItem currentItem = items.next();
-            if (currentItem instanceof DateHeader) {
-                currentItem = items.next();
-            }
-            Session currentSession = (Session) currentItem;
-            if (newSessionDay.contains(currentSession.getDateTime())) {
+            if (newSessionDay.contains(currentItem.getDateTime())) {
                 isOnlySessionForDate = false;
             }
-            if (currentSession.getDateTime().isAfter(newSession.getDateTime())) {
+            if (currentItem.getDateTime().isAfter(newSession.getDateTime())) {
                 break;
             }
         }
-        int positionForNewDate = items.nextIndex();
+        if(!items.hasNext()) {
+            currentIndex++;
+        }
 
         if (isOnlySessionForDate) {
-            theList.add(positionForNewDate++, new DateHeader(sessionChange.getTarget().getDateTime()));
+            theList.add(currentIndex++, new DateHeader(sessionChange.getTarget().getDateTime()));
         }
-        theList.add(positionForNewDate, sessionChange.getTarget());
+        theList.add(currentIndex, sessionChange.getTarget());
     }
 
     class TestHarness {

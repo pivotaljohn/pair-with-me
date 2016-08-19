@@ -38,16 +38,18 @@ public class SessionListTest {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
-        nonEmptyList.add(new DateHeader("January 2, 2016"));
-        nonEmptyList.add(new Session("1", "Early Eddie", DateTime.parse("2016-01-02T00:00:00Z"), "Getting the worm"));
+        nonEmptyList.add(new DateHeader(DateTime.parse("2016-01-01T00:00:00Z")));
+        nonEmptyList.add(new Session("1", "Freddy First", DateTime.parse("2016-01-01T01:00:00Z"), "First session."));
+        nonEmptyList.add(new DateHeader(DateTime.parse("2016-01-03T00:00:00Z")));
+        nonEmptyList.add(new Session("3", "Last Larry", DateTime.parse("2016-01-03T01:00:00Z"), "Last session"));
         subject.new TestHarness().setList(nonEmptyList);
 
-        fakeSessionViewModelChanges.onNext(new SessionInsert(new Session("2", "Late Larry", DateTime.parse("2016-12-31T13:01:00Z"), "Waking Up")));
+        fakeSessionViewModelChanges.onNext(new SessionInsert(new Session("2", "Middle Mary", DateTime.parse("2016-01-02T01:00:00Z"), "Middle session.")));
 
-        assertThat(subject.getItemCount(), equalTo(4));
+        assertThat(subject.getItemCount(), equalTo(6));
         assertThat(subject.getItem(2), instanceOf(DateHeader.class));
         assertThat(subject.getItem(3), instanceOf(Session.class));
-        assertThat(((DateHeader) subject.getItem(2)).getDate(), equalTo("December 31, 2016"));
+        assertThat(((DateHeader) subject.getItem(2)).getDate(), equalTo("January 2, 2016"));
         assertThat(((Session) subject.getItem(3)).getId(), equalTo("2"));
     }
 
@@ -56,7 +58,7 @@ public class SessionListTest {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
-        nonEmptyList.add(new DateHeader("February 2, 2016"));
+        nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-02T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "First session on this day."));
         subject.new TestHarness().setList(nonEmptyList);
 
@@ -76,7 +78,7 @@ public class SessionListTest {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
-        nonEmptyList.add(new DateHeader("February 2, 2016"));
+        nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-02T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "1st session on the 2nd."));
         nonEmptyList.add(new Session("2", "Kevin", DateTime.parse("2016-02-02T10:00:00Z"), "2nd session on the 2rd."));
         subject.new TestHarness().setList(nonEmptyList);
@@ -92,7 +94,7 @@ public class SessionListTest {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
-        nonEmptyList.add(new DateHeader("February 2, 2016"));
+        nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-02T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "1st session on the 2nd."));
         nonEmptyList.add(new Session("2", "Kevin", DateTime.parse("2016-02-02T10:00:00Z"), "2nd session on the 2rd."));
         subject.new TestHarness().setList(nonEmptyList);
@@ -112,9 +114,9 @@ public class SessionListTest {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
-        nonEmptyList.add(new DateHeader("February 2, 2016"));
+        nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-02T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "Only session on the 2nd."));
-        nonEmptyList.add(new DateHeader("February 3, 2016"));
+        nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-03T00:00:00Z")));
         nonEmptyList.add(new Session("2", "Kevin", DateTime.parse("2016-02-03T10:00:00Z"), "Only session on the 3rd."));
         subject.new TestHarness().setList(nonEmptyList);
 
@@ -132,7 +134,7 @@ public class SessionListTest {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
-        nonEmptyList.add(new DateHeader("February 2, 2016"));
+        nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-02T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2001-01-01T01:01:01Z"), "Original Session."));
         subject.new TestHarness().setList(nonEmptyList);
 
@@ -150,7 +152,7 @@ public class SessionListTest {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
         SessionList subject = new SessionList(fakeSessionViewModelChanges);
         List<SessionListItem> nonEmptyList = new LinkedList<>();
-        nonEmptyList.add(new DateHeader("January 2, 2016"));
+        nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-02T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Early Eddie", DateTime.parse("2016-01-02T00:00:00Z"), "Getting the worm"));
         subject.new TestHarness().setList(nonEmptyList);
 

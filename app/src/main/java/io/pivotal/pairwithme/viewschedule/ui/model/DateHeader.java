@@ -6,17 +6,20 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class DateHeader implements SessionListItem {
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("MMMM d, yyyy");
-    private String date;
+    private final DateTime mDateTime;
+    private final String date;
 
     public DateHeader(DateTime date) {
         this.date = DATE_FORMAT.print(date);
-    }
-
-    public DateHeader(String date) {
-        this.date = date;
+        mDateTime = date.withTimeAtStartOfDay();
     }
 
     public String getDate() {
         return date;
+    }
+
+    @Override
+    public DateTime getDateTime() {
+        return mDateTime;
     }
 }
