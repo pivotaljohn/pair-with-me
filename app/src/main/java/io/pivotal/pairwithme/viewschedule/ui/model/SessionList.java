@@ -4,7 +4,6 @@ import org.joda.time.Interval;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionChange;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionDelete;
@@ -30,53 +29,38 @@ public class SessionList {
     }
 
     private class SessionChangeSubscriber implements Action1<SessionChange> {
-
         @Override
         public void call(final SessionChange sessionChange) {
             if (sessionChange instanceof SessionInsert) {
-                insertChange(sessionChange);
+                applyInsert(sessionChange.getTarget());
             } else if (sessionChange instanceof SessionDelete) {
                 applyDelete((SessionDelete) sessionChange);
             } else if (sessionChange instanceof SessionUpdate) {
-                applyUpdate((SessionUpdate) sessionChange);
+                applyUpdate(sessionChange.getTarget());
             }
         }
     }
 
-    private void applyUpdate(SessionUpdate sessionUpdate) {
-        ListIterator<SessionListItem> items = theList.listIterator();
-        boolean sessionFound = false;
-        while (items.hasNext()) {
-            SessionListItem currentItem = items.next();
-            if (currentItem instanceof DateHeader) {
-                currentItem = items.next();
+    private void applyUpdate(final Session updatedSession) {
+        int updateIndex = indexOfItem(theList, new SearchCriteria() {
+            public boolean isMatch(SessionListItem currentItem) {
+                return currentItem instanceof Session && ((Session) currentItem).getId().equals(updatedSession.getId());
             }
-            Session currentSession = (Session) currentItem;
-            if (currentSession.getId().equals(sessionUpdate.getTarget().getId())) {
-                items.set(sessionUpdate.getTarget());
-                sessionFound = true;
-                break;
-            }
-        }
-        if(!sessionFound) {
-            insertChange(new SessionInsert(sessionUpdate.getTarget()));
+        });
+        if(updateIndex != -1) {
+            theList.set(updateIndex, updatedSession);
+        } else {
+            applyInsert(updatedSession);
         }
     }
 
-    private void applyDelete(SessionDelete deletion) {
-        ListIterator<SessionListItem> items = theList.listIterator();
-        int sessionToDelete = -1;
-        while (items.hasNext()) {
-            SessionListItem currentItem = items.next();
-            if (currentItem instanceof DateHeader) {
-                currentItem = items.next();
+    private void applyDelete(final SessionDelete deletion) {
+        int sessionToDelete = indexOfItem(theList, new SearchCriteria() {
+            public boolean isMatch(SessionListItem currentItem) {
+                return currentItem instanceof Session && ((Session) currentItem).getId().equals(deletion.getSessionId());
             }
-            Session currentSession = (Session) currentItem;
-            if (currentSession.getId().equals(deletion.getSessionId())) {
-                sessionToDelete = items.previousIndex();
-                break;
-            }
-        }
+        });
+
         if (sessionToDelete != -1) {
             theList.remove(sessionToDelete);
 
@@ -89,32 +73,58 @@ public class SessionList {
         }
     }
 
-    private void insertChange(SessionChange sessionChange) {
-        Session newSession = sessionChange.getTarget();
-        boolean isOnlySessionForDate = true;
-        Interval newSessionDay = new Interval(newSession.getDateTime().withTimeAtStartOfDay(),
-                newSession.getDateTime().plusDays(1).withTimeAtStartOfDay());
-
-        int currentIndex = -1;
-        ListIterator<SessionListItem> items = theList.listIterator();
-        while (items.hasNext()) {
-            currentIndex = items.nextIndex();
-            SessionListItem currentItem = items.next();
-            if (newSessionDay.contains(currentItem.getDateTime())) {
-                isOnlySessionForDate = false;
+    private void applyInsert(final Session newSession) {
+        int insertionIndex = indexOfItem(theList, new SearchCriteria() {
+            @Override
+            public boolean isMatch(SessionListItem currentItem) {
+                return currentItem.getDateTime().isAfter(newSession.getDateTime());
             }
-            if (currentItem.getDateTime().isAfter(newSession.getDateTime())) {
+        });
+        if(insertionIndex == -1) {
+            insertionIndex = theList.size();
+        }
+
+        if (!containsAny(theList, new OnSameDayAs(newSession))) {
+            theList.add(insertionIndex++, new DateHeader(newSession.getDateTime()));
+        }
+        theList.add(insertionIndex, newSession);
+    }
+
+    private interface SearchCriteria {
+        boolean isMatch(SessionListItem currentItem);
+    }
+
+    private static class OnSameDayAs implements SearchCriteria {
+        final Interval dayOfNewSession;
+        private final Session mNewSession;
+
+        public OnSameDayAs(Session newSession) {
+            mNewSession = newSession;
+            dayOfNewSession = new Interval(mNewSession.getDateTime().withTimeAtStartOfDay(),
+                    mNewSession.getDateTime().plusDays(1).withTimeAtStartOfDay());
+        }
+
+        public boolean isMatch(SessionListItem currentItem) {
+            return dayOfNewSession.contains(currentItem.getDateTime());
+        }
+    }
+
+    private int indexOfItem(List<SessionListItem> list, SearchCriteria searchCriteria) {
+        int currentIndex = 0;
+        for (SessionListItem currentItem : list) {
+            if (searchCriteria.isMatch(currentItem)) {
                 break;
             }
-        }
-        if(!items.hasNext()) {
             currentIndex++;
         }
-
-        if (isOnlySessionForDate) {
-            theList.add(currentIndex++, new DateHeader(sessionChange.getTarget().getDateTime()));
+        if(currentIndex == list.size()) {
+            currentIndex = -1;
         }
-        theList.add(currentIndex, sessionChange.getTarget());
+        return currentIndex;
+    }
+
+    private boolean containsAny(List<SessionListItem> list, SearchCriteria searchCriteria) {
+        return indexOfItem(list, searchCriteria) != -1;
     }
 
     class TestHarness {
