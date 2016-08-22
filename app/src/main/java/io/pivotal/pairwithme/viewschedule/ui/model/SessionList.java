@@ -1,10 +1,5 @@
 package io.pivotal.pairwithme.viewschedule.ui.model;
 
-import org.joda.time.Interval;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionChange;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionDelete;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionInsert;
@@ -12,11 +7,13 @@ import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionUpdate;
 import rx.Observable;
 import rx.functions.Action1;
 
+import static io.pivotal.pairwithme.viewschedule.ui.model.SessionItemList.*;
+
 public class SessionList {
-    private List<SessionListItem> theList;
+    private SessionItemList theList;
 
     public SessionList(final Observable<SessionChange> sessionChanges) {
-        theList = new ArrayList<>();
+        theList = new SessionItemList();
         sessionChanges.subscribe(new SessionChangeSubscriber());
     }
 
@@ -42,7 +39,7 @@ public class SessionList {
     }
 
     private void applyUpdate(final Session updatedSession) {
-        int updateIndex = indexOfItem(theList, new SearchCriteria() {
+        int updateIndex = theList.indexOfItem(new SearchCriteria() {
             public boolean isMatch(SessionListItem currentItem) {
                 return currentItem instanceof Session && ((Session) currentItem).getId().equals(updatedSession.getId());
             }
@@ -55,7 +52,7 @@ public class SessionList {
     }
 
     private void applyDelete(final SessionDelete deletion) {
-        int sessionToDelete = indexOfItem(theList, new SearchCriteria() {
+        int sessionToDelete = theList.indexOfItem(new SearchCriteria() {
             public boolean isMatch(SessionListItem currentItem) {
                 return currentItem instanceof Session && ((Session) currentItem).getId().equals(deletion.getSessionId());
             }
@@ -74,7 +71,7 @@ public class SessionList {
     }
 
     private void applyInsert(final Session newSession) {
-        int insertionIndex = indexOfItem(theList, new SearchCriteria() {
+        int insertionIndex = theList.indexOfItem(new SearchCriteria() {
             @Override
             public boolean isMatch(SessionListItem currentItem) {
                 return currentItem.getDateTime().isAfter(newSession.getDateTime());
@@ -84,51 +81,14 @@ public class SessionList {
             insertionIndex = theList.size();
         }
 
-        if (!containsAny(theList, new OnSameDayAs(newSession))) {
+        if (!theList.containsAny(new OnSameDayAs(newSession))) {
             theList.add(insertionIndex++, new DateHeader(newSession.getDateTime()));
         }
         theList.add(insertionIndex, newSession);
     }
 
-    private interface SearchCriteria {
-        boolean isMatch(SessionListItem currentItem);
-    }
-
-    private static class OnSameDayAs implements SearchCriteria {
-        final Interval dayOfNewSession;
-        private final Session mNewSession;
-
-        public OnSameDayAs(Session newSession) {
-            mNewSession = newSession;
-            dayOfNewSession = new Interval(mNewSession.getDateTime().withTimeAtStartOfDay(),
-                    mNewSession.getDateTime().plusDays(1).withTimeAtStartOfDay());
-        }
-
-        public boolean isMatch(SessionListItem currentItem) {
-            return dayOfNewSession.contains(currentItem.getDateTime());
-        }
-    }
-
-    private int indexOfItem(List<SessionListItem> list, SearchCriteria searchCriteria) {
-        int currentIndex = 0;
-        for (SessionListItem currentItem : list) {
-            if (searchCriteria.isMatch(currentItem)) {
-                break;
-            }
-            currentIndex++;
-        }
-        if(currentIndex == list.size()) {
-            currentIndex = -1;
-        }
-        return currentIndex;
-    }
-
-    private boolean containsAny(List<SessionListItem> list, SearchCriteria searchCriteria) {
-        return indexOfItem(list, searchCriteria) != -1;
-    }
-
     class TestHarness {
-        public void setList(List<SessionListItem> initialList) {
+        public void setList(SessionItemList initialList) {
             theList = initialList;
         }
     }
