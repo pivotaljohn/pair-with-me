@@ -36,56 +36,57 @@ public class SessionList {
                 applyUpdate(sessionChange.getTarget());
             }
         }
-    }
 
-    private void applyUpdate(final Session updatedSession) {
-        int updateIndex = theList.indexOfItem(new SearchCriteria() {
-            public boolean isMatch(SessionListItem currentItem) {
-                return currentItem instanceof Session && ((Session) currentItem).getId().equals(updatedSession.getId());
+        private void applyUpdate(final Session updatedSession) {
+            int updateIndex = theList.indexOfItem(new SearchCriteria() {
+                public boolean isMatch(SessionListItem currentItem) {
+                    return currentItem instanceof Session && ((Session) currentItem).getId().equals(updatedSession.getId());
+                }
+            });
+            if(updateIndex != -1) {
+                theList.set(updateIndex, updatedSession);
+            } else {
+                applyInsert(updatedSession);
             }
-        });
-        if(updateIndex != -1) {
-            theList.set(updateIndex, updatedSession);
-        } else {
-            applyInsert(updatedSession);
         }
-    }
 
-    private void applyDelete(final SessionDelete deletion) {
-        int sessionToDelete = theList.indexOfItem(new SearchCriteria() {
-            public boolean isMatch(SessionListItem currentItem) {
-                return currentItem instanceof Session && ((Session) currentItem).getId().equals(deletion.getSessionId());
-            }
-        });
+        private void applyDelete(final SessionDelete deletion) {
+            int sessionToDelete = theList.indexOfItem(new SearchCriteria() {
+                public boolean isMatch(SessionListItem currentItem) {
+                    return currentItem instanceof Session && ((Session) currentItem).getId().equals(deletion.getSessionId());
+                }
+            });
 
-        if (sessionToDelete != -1) {
-            theList.remove(sessionToDelete);
+            if (sessionToDelete != -1) {
+                theList.remove(sessionToDelete);
 
-            if (theList.get(sessionToDelete - 1) instanceof DateHeader) {
-                if (theList.size() <= sessionToDelete ||
-                        (theList.size() > sessionToDelete && theList.get(sessionToDelete) instanceof DateHeader)) {
-                    theList.remove(sessionToDelete - 1);
+                if (theList.get(sessionToDelete - 1) instanceof DateHeader) {
+                    if (theList.size() <= sessionToDelete ||
+                            (theList.size() > sessionToDelete && theList.get(sessionToDelete) instanceof DateHeader)) {
+                        theList.remove(sessionToDelete - 1);
+                    }
                 }
             }
         }
-    }
 
-    private void applyInsert(final Session newSession) {
-        int insertionIndex = theList.indexOfItem(new SearchCriteria() {
-            @Override
-            public boolean isMatch(SessionListItem currentItem) {
-                return currentItem.getDateTime().isAfter(newSession.getDateTime());
+        private void applyInsert(final Session newSession) {
+            int insertionIndex = theList.indexOfItem(new SearchCriteria() {
+                @Override
+                public boolean isMatch(SessionListItem currentItem) {
+                    return currentItem.getDateTime().isAfter(newSession.getDateTime());
+                }
+            });
+            if(insertionIndex == -1) {
+                insertionIndex = theList.size();
             }
-        });
-        if(insertionIndex == -1) {
-            insertionIndex = theList.size();
-        }
 
-        if (!theList.containsAny(new OnSameDayAs(newSession))) {
-            theList.add(insertionIndex++, new DateHeader(newSession.getDateTime()));
+            if (!theList.containsAny(new OnSameDayAs(newSession))) {
+                theList.add(insertionIndex++, new DateHeader(newSession.getDateTime()));
+            }
+            theList.add(insertionIndex, newSession);
         }
-        theList.add(insertionIndex, newSession);
     }
+
 
     class TestHarness {
         public void setList(SessionItemList initialList) {
