@@ -11,6 +11,7 @@ import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionDelete;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionInsert;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionUpdate;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.subjects.PublishSubject;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -31,6 +32,28 @@ public class ScheduleTest {
         assertThat(((Session) subject.getItem(1)).getName(), equalTo("John Doe"));
         assertThat(((Session) subject.getItem(1)).getDateTime(), equalTo(DateTime.parse("2016-01-01T13:01:00Z")));
         assertThat(((Session) subject.getItem(1)).getDescription(), equalTo("JavaScript"));
+    }
+
+    @Test
+    public void whenSessionInserted_publishesItemWasInserted() {
+        PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
+        Schedule subject = new Schedule(fakeSessionViewModelChanges);
+
+        final List<ScheduleChange> changes = new LinkedList<>();
+        subject.observeChangesByPosition().subscribe(new Action1<ScheduleChange>() {
+            @Override
+            public void call(ScheduleChange scheduleChange) {
+                changes.add(scheduleChange);
+            }
+        });
+
+        fakeSessionViewModelChanges.onNext(new SessionInsert(new Session("1", "Middle Mary", DateTime.parse("2016-01-02T01:00:00Z"), "Middle session.")));
+
+        assertThat(changes.size(), equalTo(2));
+        assertThat(changes.get(0).getType(), equalTo(ScheduleChange.Type.INSERTED));
+        assertThat(changes.get(0).getPosition(), equalTo(0));
+        assertThat(changes.get(1).getType(), equalTo(ScheduleChange.Type.INSERTED));
+        assertThat(changes.get(1).getPosition(), equalTo(1));
     }
 
     @Test
@@ -164,4 +187,5 @@ public class ScheduleTest {
         assertThat(((DateHeader) subject.getItem(2)).getDate(), equalTo("December 31, 2016"));
         assertThat(((Session) subject.getItem(3)).getId(), equalTo("2"));
     }
+
 }

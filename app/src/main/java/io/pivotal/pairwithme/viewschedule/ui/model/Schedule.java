@@ -6,13 +6,16 @@ import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionInsert;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionUpdate;
 import rx.Observable;
 import rx.functions.Action1;
+import rx.subjects.PublishSubject;
 
 import static io.pivotal.pairwithme.viewschedule.ui.model.ScheduleItemList.*;
 
 public class Schedule {
     private ScheduleItemList theList;
+    private PublishSubject<ScheduleChange> subject;
 
     public Schedule(final Observable<SessionChange> sessionChanges) {
+        subject = PublishSubject.create();
         theList = new ScheduleItemList();
         sessionChanges.subscribe(new SessionChangeSubscriber());
     }
@@ -23,6 +26,10 @@ public class Schedule {
 
     public ScheduleItem getItem(final int position) {
         return theList.get(position);
+    }
+
+    public Observable<ScheduleChange> observeChangesByPosition() {
+        return subject;
     }
 
     private class SessionChangeSubscriber implements Action1<SessionChange> {
@@ -81,9 +88,12 @@ public class Schedule {
             }
 
             if (!theList.containsAny(new OnSameDayAs(newSession))) {
-                theList.add(insertionIndex++, new DateHeader(newSession.getDateTime()));
+                theList.add(insertionIndex, new DateHeader(newSession.getDateTime()));
+                subject.onNext(new ScheduleChange(ScheduleChange.Type.INSERTED, insertionIndex));
+                insertionIndex++;
             }
             theList.add(insertionIndex, newSession);
+            subject.onNext(new ScheduleChange(ScheduleChange.Type.INSERTED, insertionIndex));
         }
     }
 

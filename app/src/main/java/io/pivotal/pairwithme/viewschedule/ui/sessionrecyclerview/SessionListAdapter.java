@@ -5,6 +5,10 @@ import android.view.ViewGroup;
 
 import io.pivotal.pairwithme.viewschedule.ui.model.DateHeader;
 import io.pivotal.pairwithme.viewschedule.ui.model.Schedule;
+import io.pivotal.pairwithme.viewschedule.ui.model.ScheduleChange;
+import rx.functions.Action1;
+
+import static io.pivotal.pairwithme.viewschedule.ui.model.ScheduleChange.Type.INSERTED;
 
 public class SessionListAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -17,6 +21,16 @@ public class SessionListAdapter extends RecyclerView.Adapter<ViewHolder> {
     public SessionListAdapter(final Schedule schedule, final ViewHolderCreator viewHolderCreator) {
         mSchedule = schedule;
         mViewHolderCreator = viewHolderCreator;
+        mSchedule.observeChangesByPosition().subscribe(new Action1<ScheduleChange>() {
+            @Override
+            public void call(ScheduleChange scheduleChange) {
+                switch (scheduleChange.getType()) {
+                    case INSERTED:
+                        notifyItemInserted(scheduleChange.getPosition());
+                        break;
+                }
+            }
+        });
     }
 
     @Override

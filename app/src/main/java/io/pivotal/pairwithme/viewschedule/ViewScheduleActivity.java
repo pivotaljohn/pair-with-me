@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import io.pivotal.pairwithme.R;
 
 public class ViewScheduleActivity extends AppCompatActivity {
@@ -14,6 +16,8 @@ public class ViewScheduleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate() called with: " + "savedInstanceState = [" + savedInstanceState + "]");
+
+        JodaTimeAndroid.init(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_schedule);

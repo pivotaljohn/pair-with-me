@@ -4,11 +4,16 @@ import android.view.ViewGroup;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import io.pivotal.pairwithme.viewschedule.ui.model.DateHeader;
 import io.pivotal.pairwithme.viewschedule.ui.model.Schedule;
+import io.pivotal.pairwithme.viewschedule.ui.model.ScheduleChange;
 import io.pivotal.pairwithme.viewschedule.ui.model.ScheduleItem;
 import io.pivotal.pairwithme.viewschedule.ui.model.Session;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -27,6 +32,8 @@ public class SessionListAdapterTest {
     @Before
     public void setUp() {
         mSchedule = mock(Schedule.class);
+        PublishSubject<ScheduleChange> observable = PublishSubject.create();
+        when(mSchedule.observeChangesByPosition()).thenReturn(observable);
         mViewHolderCreator = mock(ViewHolderCreator.class);
         DateHeaderViewHolder dateHeaderViewHolder = mock(DateHeaderViewHolder.class);
         SessionViewHolder sessionViewHolder = mock(SessionViewHolder.class);
@@ -85,5 +92,4 @@ public class SessionListAdapterTest {
 
         verify(viewHolder).setViewModel(scheduleItem);
     }
-
 }

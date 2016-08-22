@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import io.pivotal.pairwithme.R;
-import io.pivotal.pairwithme.domain.PairingSessionChanges;
+import io.pivotal.pairwithme.integrations.firebase.FirebaseRepository;
 import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionChanges;
 import io.pivotal.pairwithme.viewschedule.ui.model.Schedule;
 import io.pivotal.pairwithme.viewschedule.ui.sessionrecyclerview.SessionListAdapter;
@@ -31,11 +31,9 @@ public class ViewScheduleFragment extends Fragment {
         RecyclerView.LayoutManager sessionListLayoutManager = new LinearLayoutManager(getActivity());
         sessionListView.setLayoutManager(sessionListLayoutManager);
 
-        PairingSessionChanges pairingSessionChanges = new PairingSessionChanges();
-        SessionChanges sessionChanges = new SessionChanges(pairingSessionChanges.asObservable());
+        FirebaseRepository firebaseRepository = new FirebaseRepository();
+        SessionChanges sessionChanges = new SessionChanges(firebaseRepository.asObservable());
         final Schedule schedule = new Schedule(sessionChanges.asObservable());
-
-        pairingSessionChanges.publish();
 
         RecyclerView.Adapter sessionListAdapter = new SessionListAdapter(schedule, new ViewHolderCreator());
         sessionListView.setAdapter(sessionListAdapter);
