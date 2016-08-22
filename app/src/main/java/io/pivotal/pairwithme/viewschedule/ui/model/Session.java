@@ -4,11 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
-public class Session implements SessionListItem {
+public class Session implements ScheduleItem {
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("h:mma");
 
     private final String mId;

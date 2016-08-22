@@ -17,14 +17,14 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class SessionListTest {
+public class ScheduleTest {
 
     @Test
     public void whenSessionInserted_addsItToTheList() {
         List<SessionChange> sessionChanges = new LinkedList<>();
         sessionChanges.add(new SessionInsert(new Session("1", "John Doe", DateTime.parse("2016-01-01T13:01:00Z"), "JavaScript")));
         Observable<SessionChange> fakeSessionViewModelChanges = Observable.from(sessionChanges);
-        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+        Schedule subject = new Schedule(fakeSessionViewModelChanges);
 
         assertThat(subject.getItemCount(), equalTo(2));
         assertThat(((Session) subject.getItem(1)).getId(), equalTo("1"));
@@ -36,7 +36,7 @@ public class SessionListTest {
     @Test
     public void whenSessionInserted_andSessionOccursOnANewDate_alsoAddsANewDateHeader() {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
-        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+        Schedule subject = new Schedule(fakeSessionViewModelChanges);
         SessionItemList nonEmptyList = new SessionItemList();
         nonEmptyList.add(new DateHeader(DateTime.parse("2016-01-01T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Freddy First", DateTime.parse("2016-01-01T01:00:00Z"), "First session."));
@@ -56,7 +56,7 @@ public class SessionListTest {
     @Test
     public void whenSessionInserted_andSessionOccursOnAnExistingDate_putsSessionUnderExistingDateHeader() {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
-        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+        Schedule subject = new Schedule(fakeSessionViewModelChanges);
         SessionItemList nonEmptyList = new SessionItemList();
         nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-02T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "First session on this day."));
@@ -76,7 +76,7 @@ public class SessionListTest {
     @Test
     public void whenSessionDeleted_removesItFromTheList() {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
-        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+        Schedule subject = new Schedule(fakeSessionViewModelChanges);
         SessionItemList nonEmptyList = new SessionItemList();
         nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-02T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "1st session on the 2nd."));
@@ -92,7 +92,7 @@ public class SessionListTest {
     @Test
     public void whenSessionDeleted_whenSessionIsNotInTheList_doesNothing() {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
-        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+        Schedule subject = new Schedule(fakeSessionViewModelChanges);
         SessionItemList nonEmptyList = new SessionItemList();
         nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-02T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "1st session on the 2nd."));
@@ -112,7 +112,7 @@ public class SessionListTest {
     @Test
     public void whenSessionDeleted_whenLastOneForThatDate_removesTheDateHeaderToo() {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
-        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+        Schedule subject = new Schedule(fakeSessionViewModelChanges);
         SessionItemList nonEmptyList = new SessionItemList();
         nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-02T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2016-02-02T10:00:00Z"), "Only session on the 2nd."));
@@ -132,7 +132,7 @@ public class SessionListTest {
     @Test
     public void whenSessionUpdated_updatesTheSameSessionInTheList() {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
-        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+        Schedule subject = new Schedule(fakeSessionViewModelChanges);
         SessionItemList nonEmptyList = new SessionItemList();
         nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-02T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Karen", DateTime.parse("2001-01-01T01:01:01Z"), "Original Session."));
@@ -150,7 +150,7 @@ public class SessionListTest {
     @Test
     public void whenSessionUpdated_andSessionIsNotInTheList_addsItToTheList() {
         PublishSubject<SessionChange> fakeSessionViewModelChanges = PublishSubject.create();
-        SessionList subject = new SessionList(fakeSessionViewModelChanges);
+        Schedule subject = new Schedule(fakeSessionViewModelChanges);
         SessionItemList nonEmptyList = new SessionItemList();
         nonEmptyList.add(new DateHeader(DateTime.parse("2016-02-02T00:00:00Z")));
         nonEmptyList.add(new Session("1", "Early Eddie", DateTime.parse("2016-01-02T00:00:00Z"), "Getting the worm"));

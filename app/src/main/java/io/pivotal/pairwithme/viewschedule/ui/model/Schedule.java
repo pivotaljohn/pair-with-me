@@ -9,10 +9,10 @@ import rx.functions.Action1;
 
 import static io.pivotal.pairwithme.viewschedule.ui.model.SessionItemList.*;
 
-public class SessionList {
+public class Schedule {
     private SessionItemList theList;
 
-    public SessionList(final Observable<SessionChange> sessionChanges) {
+    public Schedule(final Observable<SessionChange> sessionChanges) {
         theList = new SessionItemList();
         sessionChanges.subscribe(new SessionChangeSubscriber());
     }
@@ -21,7 +21,7 @@ public class SessionList {
         return theList.size();
     }
 
-    public SessionListItem getItem(final int position) {
+    public ScheduleItem getItem(final int position) {
         return theList.get(position);
     }
 
@@ -39,7 +39,7 @@ public class SessionList {
 
         private void applyUpdate(final Session updatedSession) {
             int updateIndex = theList.indexOfItem(new SearchCriteria() {
-                public boolean isMatch(SessionListItem currentItem) {
+                public boolean isMatch(ScheduleItem currentItem) {
                     return currentItem instanceof Session && ((Session) currentItem).getId().equals(updatedSession.getId());
                 }
             });
@@ -52,7 +52,7 @@ public class SessionList {
 
         private void applyDelete(final SessionDelete deletion) {
             int sessionToDelete = theList.indexOfItem(new SearchCriteria() {
-                public boolean isMatch(SessionListItem currentItem) {
+                public boolean isMatch(ScheduleItem currentItem) {
                     return currentItem instanceof Session && ((Session) currentItem).getId().equals(deletion.getSessionId());
                 }
             });
@@ -72,7 +72,7 @@ public class SessionList {
         private void applyInsert(final Session newSession) {
             int insertionIndex = theList.indexOfItem(new SearchCriteria() {
                 @Override
-                public boolean isMatch(SessionListItem currentItem) {
+                public boolean isMatch(ScheduleItem currentItem) {
                     return currentItem.getDateTime().isAfter(newSession.getDateTime());
                 }
             });

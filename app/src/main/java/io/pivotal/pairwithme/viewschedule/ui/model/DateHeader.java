@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class DateHeader implements SessionListItem {
+public class DateHeader implements ScheduleItem {
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("MMMM d, yyyy");
     private final DateTime mDateTime;
     private final String date;

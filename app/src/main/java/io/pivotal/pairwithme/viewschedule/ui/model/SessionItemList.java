@@ -4,10 +4,10 @@ import org.joda.time.Interval;
 
 import java.util.LinkedList;
 
-class SessionItemList extends LinkedList<SessionListItem> {
+class SessionItemList extends LinkedList<ScheduleItem> {
     int indexOfItem(SearchCriteria searchCriteria) {
         int currentIndex = 0;
-        for (SessionListItem currentItem : this) {
+        for (ScheduleItem currentItem : this) {
             if (searchCriteria.isMatch(currentItem)) {
                 break;
             }
@@ -24,7 +24,7 @@ class SessionItemList extends LinkedList<SessionListItem> {
     }
 
     interface SearchCriteria {
-        boolean isMatch(SessionListItem currentItem);
+        boolean isMatch(ScheduleItem currentItem);
     }
 
     static class OnSameDayAs implements SearchCriteria {
@@ -37,7 +37,7 @@ class SessionItemList extends LinkedList<SessionListItem> {
                     mNewSession.getDateTime().plusDays(1).withTimeAtStartOfDay());
         }
 
-        public boolean isMatch(SessionListItem currentItem) {
+        public boolean isMatch(ScheduleItem currentItem) {
             return dayOfNewSession.contains(currentItem.getDateTime());
         }
     }
