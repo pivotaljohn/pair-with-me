@@ -7,13 +7,13 @@ import io.pivotal.pairwithme.viewschedule.ui.sessionchanges.SessionUpdate;
 import rx.Observable;
 import rx.functions.Action1;
 
-import static io.pivotal.pairwithme.viewschedule.ui.model.SessionItemList.*;
+import static io.pivotal.pairwithme.viewschedule.ui.model.ScheduleItemList.*;
 
 public class Schedule {
-    private SessionItemList theList;
+    private ScheduleItemList theList;
 
     public Schedule(final Observable<SessionChange> sessionChanges) {
-        theList = new SessionItemList();
+        theList = new ScheduleItemList();
         sessionChanges.subscribe(new SessionChangeSubscriber());
     }
 
@@ -89,7 +89,7 @@ public class Schedule {
 
 
     class TestHarness {
-        public void setList(SessionItemList initialList) {
+        public void setList(ScheduleItemList initialList) {
             theList = initialList;
         }
     }

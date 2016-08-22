@@ -4,7 +4,7 @@ import org.joda.time.Interval;
 
 import java.util.LinkedList;
 
-class SessionItemList extends LinkedList<ScheduleItem> {
+class ScheduleItemList extends LinkedList<ScheduleItem> {
     int indexOfItem(SearchCriteria searchCriteria) {
         int currentIndex = 0;
         for (ScheduleItem currentItem : this) {
