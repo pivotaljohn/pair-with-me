@@ -5,12 +5,15 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.app.AppCompatActivity;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.util.Log;
 import android.view.WindowManager;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.Set;
 
 import io.pivotal.pairwithme.viewschedule.ViewScheduleActivity;
 
@@ -23,6 +26,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class JourneyTest {
+    private static final String TAG = JourneyTest.class.getSimpleName();
+
     @Rule
     public ActivityTestRule<ViewScheduleActivity> initialActivity =
             new ActivityTestRule<>(ViewScheduleActivity.class, true, false);
@@ -39,8 +44,35 @@ public class JourneyTest {
         activity.runOnUiThread(wakeUpDevice);
     }
 
+    public Thread getThreadByName(String threadName) {
+        for (Thread t : Thread.getAllStackTraces().keySet()) {
+            if (t.getName().equals(threadName)) return t;
+        }
+        return null;
+    }
+
     @Test
     public void KathyAndKevinFindATimeToPair() {
+
+        Thread firebaseDatabaseWorkerWatchdog = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Thread.State lastKnownState = Thread.State.TERMINATED;
+                while (true) {
+                    Thread firebaseDatabaseWorkerThread = getThreadByName("FirebaseDatabaseWorker");
+                    if(firebaseDatabaseWorkerThread != null) {
+                        Thread.State currentState = firebaseDatabaseWorkerThread.getState();
+                        if (!currentState.equals(lastKnownState)) {
+                            lastKnownState = currentState;
+                            Log.i(TAG, "run: FirebaseDatabaseWorker.state = " + firebaseDatabaseWorkerThread.getState().toString());
+                        }
+                    }
+                }
+            }
+        }, "FirebaseDatabaseWorkerWatchdog");
+        firebaseDatabaseWorkerWatchdog.setDaemon(true);
+        firebaseDatabaseWorkerWatchdog.start();
+
         initialActivity.launchActivity(new Intent());
         unlockDevice();
 
