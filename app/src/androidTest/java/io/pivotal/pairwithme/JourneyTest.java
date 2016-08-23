@@ -1,6 +1,7 @@
 package io.pivotal.pairwithme;
 
 import android.content.Intent;
+import android.support.test.espresso.IdlingPolicies;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.concurrent.TimeUnit;
 
 import io.pivotal.pairwithme.viewschedule.ViewScheduleActivity;
 
@@ -43,6 +46,12 @@ public class JourneyTest {
     public void KathyAndKevinFindATimeToPair() {
         initialActivity.launchActivity(new Intent());
         unlockDevice();
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         onView(withId(R.id.view_schedule_screen))
                 .check(matches(isDisplayed()));
